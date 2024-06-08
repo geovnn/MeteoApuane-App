@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+
 }
 
 android {
@@ -77,8 +80,12 @@ dependencies {
     // Material (for m3 pullrefresh)
     implementation (libs.androidx.material)
 
-//    //Flying Saucer
-//    implementation(libs.flying.saucer.core)
-//    implementation(libs.flying.saucer.pdf)
+    // Dagger Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+}
 
+kapt {
+    correctErrorTypes = true
 }
