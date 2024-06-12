@@ -1,6 +1,6 @@
 package com.geovnn.meteoapuane.di
 
-import com.geovnn.meteoapuane.data.remote.MeteoapuaneApi
+import com.geovnn.meteoapuane.data.remote.MeteoapuaneScrape
 import com.geovnn.meteoapuane.data.repository.MeteoRepositoryImplementation
 import com.geovnn.meteoapuane.domain.repository.MeteoRepository
 import com.geovnn.meteoapuane.domain.use_cases.GetConfiniPage
@@ -20,13 +20,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMeteoapuaneApi(): MeteoapuaneApi {
-        return MeteoapuaneApi()
+    fun provideMeteoapuaneApi(): MeteoapuaneScrape {
+        return MeteoapuaneScrape()
     }
 
     @Provides
     @Singleton
-    fun provideMeteoRepository(api: MeteoapuaneApi): MeteoRepository {
+    fun provideMeteoRepository(api: MeteoapuaneScrape): MeteoRepository {
         return MeteoRepositoryImplementation(api)
     }
 

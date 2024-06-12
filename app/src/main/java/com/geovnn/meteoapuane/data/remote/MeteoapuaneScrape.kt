@@ -20,7 +20,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.net.URL
 
-class MeteoapuaneApi {
+class MeteoapuaneScrape {
 
     private suspend fun getBitmapFromUrl(url: String): Bitmap? {
         return withContext(Dispatchers.IO) {

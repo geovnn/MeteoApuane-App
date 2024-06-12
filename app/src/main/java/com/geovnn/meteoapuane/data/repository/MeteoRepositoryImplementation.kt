@@ -1,7 +1,7 @@
 package com.geovnn.meteoapuane.data.repository
 
 import com.geovnn.meteoapuane.domain.utils.Resource
-import com.geovnn.meteoapuane.data.remote.MeteoapuaneApi
+import com.geovnn.meteoapuane.data.remote.MeteoapuaneScrape
 import com.geovnn.meteoapuane.domain.models.ConfiniPage
 import com.geovnn.meteoapuane.domain.models.HomePage
 import com.geovnn.meteoapuane.domain.models.MontagnaPage
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class MeteoRepositoryImplementation @Inject constructor(
-    private val api: MeteoapuaneApi
+    private val api: MeteoapuaneScrape
 ): MeteoRepository {
 
     override fun getHomePage(): Flow<Resource<HomePage>> = flow {
