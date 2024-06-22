@@ -14,6 +14,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CardDefaults
@@ -43,6 +44,9 @@ import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.presentation.montagna.composables.MappaMontagna
 import com.geovnn.meteoapuane.presentation.utils.composables.AutoResizeText
 import com.geovnn.meteoapuane.presentation.utils.FontSizeRange
+import com.geovnn.meteoapuane.presentation.utils.composables.BodyText
+import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
+import com.geovnn.meteoapuane.presentation.utils.composables.UltimoAggiornamentoText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -50,7 +54,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MontagnaScreen(
     uiState: MontagnaUiState,
-    onMenuClick: () -> Unit,
     refreshData: () -> Unit
 ) {
     val refreshScope = rememberCoroutineScope()
@@ -63,56 +66,32 @@ fun MontagnaScreen(
     }
     val state = rememberPullRefreshState(isRefreshing, ::refresh)
 
-    Scaffold(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Montagna",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer) },
-                navigationIcon = {
-                    IconButton(onClick = { onMenuClick() }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            .pullRefresh(state)
+    ) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .width(64.dp)
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.secondary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
-        },
-
-        ) { paddingValues ->
-
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .pullRefresh(state)
-        ) {
-            if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .width(64.dp)
-                        .align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                )
-            } else if (uiState.error!="") {
-                AlertDialog(
-                    onDismissRequest = {  },
-                    confirmButton = { TextButton(onClick = { refreshData() }) {
-                        Text(text = "Riprova")
-                    } },
-                    title = { Text(text = "Errore") },
-                    text = { Text(text = uiState.error) }
-                )
-            } else {
-                Column(
-                    modifier=Modifier.verticalScroll(rememberScrollState())
-                ) {
+        } else if (uiState.error!="") {
+            AlertDialog(
+                onDismissRequest = {  },
+                confirmButton = { TextButton(onClick = { refreshData() }) {
+                    Text(text = "Riprova")
+                } },
+                title = { Text(text = "Errore") },
+                text = { Text(text = uiState.error) }
+            )
+        } else {
+            Column(
+                modifier=Modifier.verticalScroll(rememberScrollState())
+            ) {
 //                    Text(
 //                        text = uiState.testoUltimoAggiornamento,
 //                        modifier = Modifier
@@ -123,58 +102,46 @@ fun MontagnaScreen(
 //                        textAlign = TextAlign.Center,
 //                    )
 
-                    AutoResizeText(
-                        text = uiState.montagnaPage.testoUltimoAggiornamento,
-                        maxLines = 1,
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 2.dp),
-                        fontSizeRange = FontSizeRange(
-                            min = 10.sp,
-                            max = 22.sp,
-                        ),
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                UltimoAggiornamentoText(text = uiState.montagnaPage.testoUltimoAggiornamento)
+
 
 //                    Divider()
 
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "BOLLETTINO MONTAGNA",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                    )
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "Previsioni a 3 giorni per le principali località sciistiche e montane delle Apuane ed Appennino settentrionale ",
-                        fontWeight = FontWeight.Bold,
-//                                fontSize = 18.sp,
-                        textAlign = TextAlign.Center
-                    )
+//                TitleText(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    text = "BOLLETTINO MONTAGNA",
+//                )
+//                BodyText(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    text = "Previsioni a 3 giorni per le principali località sciistiche e montane delle Apuane ed Appennino settentrionale ",
+//                )
 
-                    MappaMontagna(uiState = uiState)
-                    ElevatedCard(
-                        modifier = Modifier.padding(5.dp),
-                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-                    ) {
-                        Column(modifier = Modifier.padding(5.dp)) {
+                MappaMontagna(uiState = uiState)
+                ElevatedCard(
+                    modifier = Modifier.padding(5.dp),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+                    )                ) {
+                    Column(modifier = Modifier.padding(5.dp)) {
 
 
-                            Text(
-                                text = uiState.montagnaPage.testo,
-                                modifier = Modifier
-                                    .fillMaxWidth()
+                        BodyText(
+                            text = uiState.montagnaPage.testo,
+                            modifier = Modifier
+                                .fillMaxWidth()
 //                                    .padding(3.dp),
 //                        fontSize = 14.sp,
-                            )
-                        }
+                        )
                     }
-
-
                 }
+
+
             }
         }
+        PullRefreshIndicator(isRefreshing, state, Modifier.align(Alignment.TopCenter))
+
     }
 }
 

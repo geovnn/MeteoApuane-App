@@ -1,30 +1,46 @@
 package com.geovnn.meteoapuane.presentation.provincia.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Nightlight
+import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material.icons.outlined.Nightlight
+import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.domain.models.ProvinciaPageTab
+import com.geovnn.meteoapuane.presentation.utils.composables.BodyText
+import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -34,21 +50,138 @@ fun PaginaProvincia(
     uiState: ProvinciaPageTab
 ) {
     Column(
-        modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         val pagerState = rememberPagerState(pageCount = { 2 })
         val coroutineScope = rememberCoroutineScope()
         TabRow(selectedTabIndex = pagerState.currentPage) {
+//            Column(
+//                modifier = Modifier
+//                    .padding(2.dp)
+//                    .clickable { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                IconButton(
+//                    modifier = Modifier
+//                        .align(Alignment.CenterHorizontally)
+//                        .background(
+//                            color = if (pagerState.currentPage == 0)
+//                                MaterialTheme.colorScheme.primaryContainer else
+//                                Color.Transparent,
+//                            shape = MaterialTheme.shapes.large
+//                        ),
+//                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(0)} }
+//                ) {
+//                    Icon(
+//                        modifier = Modifier
+//                            .align(Alignment.CenterHorizontally),
+//                        imageVector = if (pagerState.currentPage == 0)
+//                            Icons.Filled.WbSunny else
+//                            Icons.Outlined.WbSunny,
+//                        contentDescription = "Localized description",
+//                        tint = if (pagerState.currentPage == 0)
+//                            MaterialTheme.colorScheme.onPrimaryContainer else
+//                            MaterialTheme.colorScheme.onSurface,
+//                    )
+//                }
+//                Text(
+//                    text = "Mattina",
+//                    modifier = Modifier
+//                        .align(Alignment.CenterHorizontally),
+//                    color = MaterialTheme.colorScheme.onSurface,
+//                    textAlign = TextAlign.Center,
+//                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+//                    fontWeight = MaterialTheme.typography.labelLarge.fontWeight,
+//                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+//                    fontStyle = MaterialTheme.typography.labelLarge.fontStyle
+//                )
+//            }
+//            Column(
+//                modifier = Modifier
+//                    .padding(2.dp)
+//                    .clickable { coroutineScope.launch { pagerState.animateScrollToPage(1) } },
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                IconButton(
+//                    modifier = Modifier
+//                        .align(Alignment.CenterHorizontally)
+//                        .background(
+//                            color = if (pagerState.currentPage == 1)
+//                                MaterialTheme.colorScheme.primaryContainer else
+//                                Color.Transparent,
+//                            shape = MaterialTheme.shapes.large
+//                        ),
+//                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1)} }
+//                ) {
+//                    Icon(
+//                        modifier = Modifier
+//                            .align(Alignment.CenterHorizontally),
+//                        imageVector = if (pagerState.currentPage == 1)
+//                            Icons.Filled.Nightlight else
+//                            Icons.Outlined.Nightlight,
+//                        contentDescription = "Localized description",
+//                        tint = if (pagerState.currentPage == 1)
+//                            MaterialTheme.colorScheme.onPrimaryContainer else
+//                            MaterialTheme.colorScheme.onSurface,
+//                    )
+//                }
+//                Text(
+//                    text = "Sera",
+//                    modifier = Modifier
+//                        .align(Alignment.CenterHorizontally),
+//                    color = MaterialTheme.colorScheme.onSurface,
+//                    textAlign = TextAlign.Center,
+//                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+//                    fontWeight = MaterialTheme.typography.labelLarge.fontWeight,
+//                    fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+//                    fontStyle = MaterialTheme.typography.labelLarge.fontStyle
+//                )
+//            }
             Tab(
-                text = { Text(text = "Mattina") },
+                text = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = if (pagerState.currentPage == 0)
+                                Icons.Filled.WbSunny else
+                                Icons.Outlined.WbSunny,
+                            contentDescription = "Mattina")
+                        Spacer(modifier = modifier.width(3.dp))
+                        Text(
+                            text = "Mattina",
+                            fontSize = MaterialTheme.typography.titleSmall.fontSize,
+                            fontWeight = MaterialTheme.typography.titleSmall.fontWeight,
+                            fontFamily = MaterialTheme.typography.titleSmall.fontFamily,
+                            fontStyle = MaterialTheme.typography.titleSmall.fontStyle
+                        ) }
+                },
                 selected = pagerState.currentPage == 0,
                 onClick = { coroutineScope.launch { pagerState.animateScrollToPage(0) } }
             )
             Tab(
-                text = { Text(text = "Sera") },
+                text = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = if (pagerState.currentPage == 1)
+                                Icons.Filled.Nightlight else
+                                Icons.Outlined.Nightlight,
+                            contentDescription = "Sera")
+                        Spacer(modifier = modifier.width(3.dp))
+                        Text(text = "Sera",
+                            fontSize = MaterialTheme.typography.titleSmall.fontSize,
+                            fontWeight = MaterialTheme.typography.titleSmall.fontWeight,
+                            fontFamily = MaterialTheme.typography.titleSmall.fontFamily,
+                            fontStyle = MaterialTheme.typography.titleSmall.fontStyle) }
+                },
                 selected = pagerState.currentPage == 1,
                 onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) } }
             )
+//            Tab(
+//                text = { Text(text = "Sera") },
+//                selected = pagerState.currentPage == 1,
+//                onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) } }
+//            )
         }
         HorizontalPager(
             state = pagerState,
@@ -75,57 +208,68 @@ fun PaginaProvincia(
         ElevatedCard(
             modifier = Modifier.padding(5.dp),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+                )
         ) {
-            Text(modifier = Modifier.padding(5.dp),text = uiState.testo)
+            BodyText(modifier = Modifier.padding(5.dp),text = uiState.testo)
         }
         ElevatedCard(
             modifier = Modifier.padding(5.dp),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        ) {
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+            )        ) {
             Column(modifier = Modifier.padding(5.dp)) {
-                Text(modifier = Modifier.fillMaxWidth(), text = "TEMPERATURE", fontWeight = FontWeight.Bold, fontSize = 18.sp, textAlign = TextAlign.Center)
-                Text(text = uiState.testoTemperature)
-                Divider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.secondary)
-                Text(modifier = Modifier.fillMaxWidth(), text = "VENTI", fontWeight = FontWeight.Bold, fontSize = 18.sp, textAlign = TextAlign.Center)
-                Text(text = uiState.testoVenti)
-                Divider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.secondary)
-                Text(modifier = Modifier.fillMaxWidth(), text = "MARE", fontWeight = FontWeight.Bold, fontSize = 18.sp, textAlign = TextAlign.Center)
-                Text(text = uiState.testoMare)
+                TitleText(modifier = Modifier.fillMaxWidth(), text = "TEMPERATURE")
+                BodyText(text = uiState.testoTemperature)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
+
+//                Divider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.secondary)
+                TitleText(modifier = Modifier.fillMaxWidth(), text = "VENTI")
+                BodyText(text = uiState.testoVenti)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
+
+//                Divider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.secondary)
+                TitleText(modifier = Modifier.fillMaxWidth(), text = "MARE")
+                BodyText(text = uiState.testoMare)
             }
         }
         ElevatedCard(
             modifier = Modifier.padding(5.dp),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        ) {
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+            )        ) {
             Column(modifier = Modifier.padding(5.dp)) {
-                Text(modifier = Modifier.fillMaxWidth(), text = "TEMPERATURE (°C)", fontWeight = FontWeight.Bold, fontSize = 18.sp, textAlign = TextAlign.Center)
+                TitleText(modifier = Modifier.fillMaxWidth(), text = "TEMPERATURE (°C)")
                 Row {
-                    Text(modifier = Modifier.weight(4f),text = "")
-                    Text(modifier = Modifier.weight(1f),text = "MIN")
-                    Text(modifier = Modifier.weight(1f),text = "MAX")
+                    BodyText(modifier = Modifier.weight(4f),text = "")
+                    BodyText(modifier = Modifier.weight(1f),text = "MIN")
+                    BodyText(modifier = Modifier.weight(1f),text = "MAX")
                 }
-                Divider(color = MaterialTheme.colorScheme.secondary)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
                 Row {
-                    Text(modifier = Modifier.weight(4f),text = "MASSA")
-                    Text(modifier = Modifier.weight(1f),text = uiState.temperatureMassa.first.toString())
-                    Text(modifier = Modifier.weight(1f),text = uiState.temperatureMassa.second.toString())
+                    BodyText(modifier = Modifier.weight(4f),text = "MASSA")
+                    BodyText(modifier = Modifier.weight(1f),text = uiState.temperatureMassa.first.toString())
+                    BodyText(modifier = Modifier.weight(1f),text = uiState.temperatureMassa.second.toString())
                 }
-                Divider(color = MaterialTheme.colorScheme.secondary)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
                 Row {
-                    Text(modifier = Modifier.weight(4f),text = "CARRARA")
-                    Text(modifier = Modifier.weight(1f),text = uiState.temperatureCarrara.first.toString())
-                    Text(modifier = Modifier.weight(1f),text = uiState.temperatureCarrara.second.toString())
+                    BodyText(modifier = Modifier.weight(4f),text = "CARRARA")
+                    BodyText(modifier = Modifier.weight(1f),text = uiState.temperatureCarrara.first.toString())
+                    BodyText(modifier = Modifier.weight(1f),text = uiState.temperatureCarrara.second.toString())
                 }
-                Divider(color = MaterialTheme.colorScheme.secondary)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
                 Row {
-                    Text(modifier = Modifier.weight(4f),text = "AULLA")
-                    Text(modifier = Modifier.weight(1f),text = uiState.temperatureAulla.first.toString())
-                    Text(modifier = Modifier.weight(1f),text = uiState.temperatureAulla.second.toString())
+                    BodyText(modifier = Modifier.weight(4f),text = "AULLA")
+                    BodyText(modifier = Modifier.weight(1f),text = uiState.temperatureAulla.first.toString())
+                    BodyText(modifier = Modifier.weight(1f),text = uiState.temperatureAulla.second.toString())
                 }
-                Divider(color = MaterialTheme.colorScheme.secondary)
+                HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
 //                Row {
 //                    Text(modifier = Modifier.weight(4f),text = "FIVIZZANO")
 //                    Text(modifier = Modifier.weight(1f),text = uiState.temperatureFivizzano.first.toString())
@@ -133,9 +277,9 @@ fun PaginaProvincia(
 //                }
 //                Divider(color = MaterialTheme.colorScheme.secondary)
                 Row {
-                    Text(modifier = Modifier.weight(4f),text = "PONTREMOLI")
-                    Text(modifier = Modifier.weight(1f),text = uiState.temperaturePontremoli.first.toString())
-                    Text(modifier = Modifier.weight(1f),text = uiState.temperaturePontremoli.second.toString())
+                    BodyText(modifier = Modifier.weight(4f),text = "PONTREMOLI")
+                    BodyText(modifier = Modifier.weight(1f),text = uiState.temperaturePontremoli.first.toString())
+                    BodyText(modifier = Modifier.weight(1f),text = uiState.temperaturePontremoli.second.toString())
                 }
             }
         }

@@ -15,6 +15,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.presentation.confini.composables.PaginaConfini
+import com.geovnn.meteoapuane.presentation.utils.composables.UltimoAggiornamentoText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -49,7 +51,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun ConfiniScreen(
     uiState: ConfiniUiState,
-    onMenuClick: () -> Unit,
     refreshData: () -> Unit
 ) {
     val refreshScope = rememberCoroutineScope()
@@ -67,99 +68,69 @@ fun ConfiniScreen(
 //        refreshData()
 //    }
 
-    Scaffold(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Confini",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer) },
-                navigationIcon = {
-                    IconButton(onClick = { onMenuClick() }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+            .pullRefresh(state)
+    ) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .width(64.dp)
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.secondary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            )
+        } else if (uiState.error!="") {
+            AlertDialog(
+                onDismissRequest = {  },
+                confirmButton = { TextButton(onClick = { refreshData() }) {
+                    Text(text = "Riprova")
+                } },
+                title = { Text(text = "Errore") },
+                text = { Text(text = uiState.error) }
+            )
+        } else {
+            Column {
+                val pagerState = rememberPagerState(pageCount = { 4 })
+                val tabRowItems = listOf(
+                    uiState.confiniPage.paginaOggi.data,
+                    uiState.confiniPage.paginaDomani.data,
+                    uiState.confiniPage.paginaDopodomani.data,
+                )
+                UltimoAggiornamentoText(text=uiState.confiniPage.testoUltimoAggiornamento)
+                Text(
+                    text = uiState.confiniPage.testoPrevisione,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(3.dp),
+//                        fontSize = 14.sp,
+                )
+                TabRow(selectedTabIndex = pagerState.currentPage) {
+                    tabRowItems.forEachIndexed { index, item ->//iterate over TabItem List
+                        Tab(//Create tab for each item
+                            text = { Text(text = item) },
+                            selected = pagerState.currentPage == index,//select only when current index is stored page
+                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } }//animate scroll onClick
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-            )
-        },
+                }
 
-        ) { paddingValues ->
-
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .pullRefresh(state)
-        ) {
-            if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .width(64.dp)
-                        .align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                )
-            } else if (uiState.error!="") {
-                AlertDialog(
-                    onDismissRequest = {  },
-                    confirmButton = { TextButton(onClick = { refreshData() }) {
-                        Text(text = "Riprova")
-                    } },
-                    title = { Text(text = "Errore") },
-                    text = { Text(text = uiState.error) }
-                )
-            } else {
-                Column {
-                    val pagerState = rememberPagerState(pageCount = { 4 })
-                    val tabRowItems = listOf(
-                        uiState.confiniPage.paginaOggi.data,
-                        uiState.confiniPage.paginaDomani.data,
-                        uiState.confiniPage.paginaDopodomani.data,
-                    )
-                    Text(
-                        text = uiState.confiniPage.testoUltimoAggiornamento,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(3.dp),
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Text(
-                        text = uiState.confiniPage.testoPrevisione,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(3.dp),
-//                        fontSize = 14.sp,
-                    )
-                    TabRow(selectedTabIndex = pagerState.currentPage) {
-                        tabRowItems.forEachIndexed { index, item ->//iterate over TabItem List
-                            Tab(//Create tab for each item
-                                text = { Text(text = item) },
-                                selected = pagerState.currentPage == index,//select only when current index is stored page
-                                onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } }//animate scroll onClick
-                            )
-                        }
-                    }
-
-                    HorizontalPager(
-                        modifier = Modifier.fillMaxSize(),
-                        state = pagerState,
-                        beyondBoundsPageCount = 3
-                    ) { page ->
-                        when(page) {
-                            0 -> PaginaConfini( uiState = uiState.confiniPage.paginaOggi)
-                            1 -> PaginaConfini(uiState = uiState.confiniPage.paginaDomani)
-                            2 -> PaginaConfini(uiState = uiState.confiniPage.paginaDopodomani)
-                        }
+                HorizontalPager(
+                    modifier = Modifier.fillMaxSize(),
+                    state = pagerState,
+                    beyondBoundsPageCount = 3
+                ) { page ->
+                    when(page) {
+                        0 -> PaginaConfini( uiState = uiState.confiniPage.paginaOggi)
+                        1 -> PaginaConfini(uiState = uiState.confiniPage.paginaDomani)
+                        2 -> PaginaConfini(uiState = uiState.confiniPage.paginaDopodomani)
                     }
                 }
             }
         }
+        PullRefreshIndicator(isRefreshing, state, Modifier.align(Alignment.TopCenter))
+
     }
 }
 

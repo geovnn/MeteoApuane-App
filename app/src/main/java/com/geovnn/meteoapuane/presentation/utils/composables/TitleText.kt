@@ -1,4 +1,4 @@
-package com.geovnn.meteoapuane.presentation.home.composables
+package com.geovnn.meteoapuane.presentation.utils.composables
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,13 +17,12 @@ fun TitleText(
     modifier: Modifier = Modifier
 ) {
     Text(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(5.dp),
+        modifier = modifier,
         text = text,
         textAlign = TextAlign.Center,
-        fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onSecondaryContainer
+        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+        fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+        fontFamily = MaterialTheme.typography.titleLarge.fontFamily,
+        fontStyle = MaterialTheme.typography.titleLarge.fontStyle
     )
 }

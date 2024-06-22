@@ -15,6 +15,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
@@ -41,6 +42,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.presentation.provincia.composables.PaginaProvincia
 import com.geovnn.meteoapuane.presentation.provincia.composables.PaginaSuccessivi
+import com.geovnn.meteoapuane.presentation.utils.FontSizeRange
+import com.geovnn.meteoapuane.presentation.utils.composables.AutoResizeText
+import com.geovnn.meteoapuane.presentation.utils.composables.UltimoAggiornamentoText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -51,7 +55,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProvinciaScreen(
     uiState: ProvinciaUiState,
-    onMenuClick: () -> Unit,
     refreshData: () -> Unit
 ) {
     val refreshScope = rememberCoroutineScope()
@@ -69,90 +72,73 @@ fun ProvinciaScreen(
 //        refreshData()
 //    }
 
-    Scaffold(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Provincia",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer) },
-                navigationIcon = {
-                    IconButton(onClick = { onMenuClick() }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+            .pullRefresh(state)
+    ) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .width(64.dp)
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.onPrimary,
+            )
+        } else if (uiState.error!="") {
+            AlertDialog(
+                onDismissRequest = {  },
+                confirmButton = { TextButton(onClick = { refreshData() }) {
+                    Text(text = "Riprova")
+                } },
+                title = { Text(text = "Errore") },
+                text = { Text(text = uiState.error) },
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            )
+        } else {
+            Column {
+                val pagerState = rememberPagerState(pageCount = { 4 })
+                val tabRowItems = listOf(
+                    uiState.provinciaPage.paginaOggi.data,
+                    uiState.provinciaPage.paginaDomani.data,
+                    uiState.provinciaPage.paginaDopodomani.data,
+                    uiState.provinciaPage.paginaSuccessivi.label
+                )
+                UltimoAggiornamentoText(text = uiState.provinciaPage.testoUltimoAggiornamento)
+//                Text(
+//                    text = uiState.provinciaPage.testoUltimoAggiornamento,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(3.dp),
+//                    fontSize = 14.sp,
+//                    textAlign = TextAlign.Center
+//                )
+                TabRow(selectedTabIndex = pagerState.currentPage) {
+                    tabRowItems.forEachIndexed { index, item ->//iterate over TabItem List
+                        Tab(//Create tab for each item
+                            text = { Text(text = item,
+                                fontSize = MaterialTheme.typography.titleSmall.fontSize,
+                                fontWeight = MaterialTheme.typography.titleSmall.fontWeight,
+                                fontFamily = MaterialTheme.typography.titleSmall.fontFamily,
+                                fontStyle = MaterialTheme.typography.titleSmall.fontStyle)},
+                            selected = pagerState.currentPage == index,//select only when current index is stored page
+                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } }//animate scroll onClick
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-            )
-        },
+                }
 
-        ) { paddingValues ->
-
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .pullRefresh(state)
-        ) {
-            if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .width(64.dp)
-                        .align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                )
-            } else if (uiState.error!="") {
-                AlertDialog(
-                    onDismissRequest = {  },
-                    confirmButton = { TextButton(onClick = { refreshData() }) {
-                        Text(text = "Riprova")
-                    } },
-                    title = { Text(text = "Errore") },
-                    text = { Text(text = uiState.error) }
-                )
-            } else {
-                Column {
-                    val pagerState = rememberPagerState(pageCount = { 4 })
-                    val tabRowItems = listOf(
-                        uiState.provinciaPage.paginaOggi.data,
-                        uiState.provinciaPage.paginaDomani.data,
-                        uiState.provinciaPage.paginaDopodomani.data,
-                        uiState.provinciaPage.paginaSuccessivi.label
-                    )
-                    Text(
-                        text = uiState.provinciaPage.testoUltimoAggiornamento,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(3.dp),
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    TabRow(selectedTabIndex = pagerState.currentPage) {
-                        tabRowItems.forEachIndexed { index, item ->//iterate over TabItem List
-                            Tab(//Create tab for each item
-                                text = { Text(text = item)},
-                                selected = pagerState.currentPage == index,//select only when current index is stored page
-                                onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } }//animate scroll onClick
-                            )
-                        }
+                HorizontalPager(
+                    modifier = Modifier.fillMaxSize(),
+                    state = pagerState,
+                    beyondBoundsPageCount = 3
+                ) { page ->
+                    when(page) {
+                        0 -> PaginaProvincia( uiState = uiState.provinciaPage.paginaOggi)
+                        1 -> PaginaProvincia(uiState = uiState.provinciaPage.paginaDomani)
+                        2 -> PaginaProvincia(uiState = uiState.provinciaPage.paginaDopodomani)
+                        3 -> PaginaSuccessivi(uiState = uiState.provinciaPage.paginaSuccessivi)
                     }
-
-                    HorizontalPager(
-                        modifier = Modifier.fillMaxSize(),
-                        state = pagerState,
-                        beyondBoundsPageCount = 3
-                    ) { page ->
-                        when(page) {
-                            0 -> PaginaProvincia( uiState = uiState.provinciaPage.paginaOggi)
-                            1 -> PaginaProvincia(uiState = uiState.provinciaPage.paginaDomani)
-                            2 -> PaginaProvincia(uiState = uiState.provinciaPage.paginaDopodomani)
-                            3 -> PaginaSuccessivi(uiState = uiState.provinciaPage.paginaSuccessivi)
-                        }
 //                        Column(
 //                            modifier = Modifier
 //                                .verticalScroll(rememberScrollState())
@@ -163,12 +149,13 @@ fun ProvinciaScreen(
 //
 //                        }
 
-                    }
-
                 }
 
             }
+
         }
+        PullRefreshIndicator(isRefreshing, state, Modifier.align(Alignment.TopCenter))
+
     }
 }
 

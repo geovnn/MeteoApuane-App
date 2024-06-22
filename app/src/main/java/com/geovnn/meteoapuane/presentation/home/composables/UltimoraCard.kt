@@ -32,7 +32,7 @@ fun UltimoraCard(
             .fillMaxWidth()
             .padding(10.dp),
         colors = CardDefaults.outlinedCardColors(
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer
+//            containerColor = MaterialTheme.colorScheme.tertiaryContainer
         )
     ) {
         Column {
@@ -56,8 +56,11 @@ fun UltimoraCard(
                     modifier= Modifier
                         .align(Alignment.CenterVertically)
                         .fillMaxHeight(),
-                    color = MaterialTheme.colorScheme.onTertiaryContainer
-
+//                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.titleMedium.fontWeight,
+                    fontFamily = MaterialTheme.typography.titleMedium.fontFamily,
+                    fontStyle = MaterialTheme.typography.titleMedium.fontStyle
                 )
             }
             Text(
@@ -66,8 +69,12 @@ fun UltimoraCard(
                     .padding(10.dp),
                 text = body,
 //        fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onTertiaryContainer
+//                fontWeight = FontWeight.Normal,
+//                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+                fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
+                fontStyle = MaterialTheme.typography.bodyLarge.fontStyle
 
             )
         }

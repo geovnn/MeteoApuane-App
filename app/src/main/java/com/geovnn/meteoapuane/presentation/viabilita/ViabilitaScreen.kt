@@ -15,10 +15,13 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.presentation.utils.composables.AutoResizeText
 import com.geovnn.meteoapuane.presentation.utils.FontSizeRange
+import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -47,7 +51,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun ViabilitaScreen(
     uiState: ViabilitaUiState,
-    onMenuClick: () -> Unit,
     refreshData: () -> Unit
 ) {
     val refreshScope = rememberCoroutineScope()
@@ -64,94 +67,76 @@ fun ViabilitaScreen(
 //        refreshData()
 //    }
 
-    Scaffold(
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Meteo - Viabilita'",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer) },
-                navigationIcon = {
-                    IconButton(onClick = { onMenuClick() }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            .pullRefresh(state)
+    ) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .width(64.dp)
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.secondary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
-        },
+        } else if (uiState.error!="") {
+            AlertDialog(
+                onDismissRequest = {  },
+                confirmButton = { TextButton(onClick = { refreshData() }) {
+                    Text(text = "Riprova")
+                } },
+                title = { Text(text = "Errore") },
+                text = { Text(text = uiState.error) }
+            )
+        } else {
+            Column(
+                modifier= Modifier.verticalScroll(rememberScrollState())
+            ) {
 
-        ) { paddingValues ->
-
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-                .pullRefresh(state)
-        ) {
-            if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .width(64.dp)
-                        .align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.secondary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                )
-            } else if (uiState.error!="") {
-                AlertDialog(
-                    onDismissRequest = {  },
-                    confirmButton = { TextButton(onClick = { refreshData() }) {
-                        Text(text = "Riprova")
-                    } },
-                    title = { Text(text = "Errore") },
-                    text = { Text(text = uiState.error) }
-                )
-            } else {
-                Column(
-                    modifier= Modifier.verticalScroll(rememberScrollState())
+                ElevatedCard(
+                    modifier = Modifier.padding(5.dp),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
                 ) {
-
-                    Card(
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        AutoResizeText(
-                            text = uiState.viabilitaPage.testoSegnalazione,
-                            maxLines = 2,
-                            modifier = Modifier
-                                .fillMaxWidth(),
-//                                    .padding(bottom = 2.dp),
-                            fontSizeRange = FontSizeRange(
-                                min = 10.sp,
-                                max = 22.sp,
-                            ),
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-
-                    Card(
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Column {
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(modifier = Modifier.weight(2f), fontSize = 10.sp,text = "Tratta")
-                                Text(modifier = Modifier.weight(1f), fontSize = 10.sp,text = "VENTO")
-                                Text(modifier = Modifier.weight(1f), fontSize = 10.sp,text = "PIOGGIA")
-                                Text(modifier = Modifier.weight(1f), fontSize = 10.sp,text = "NEBBIA")
-                                Text(modifier = Modifier.weight(1f), fontSize = 10.sp,text = "NEVE")
-                                Text(modifier = Modifier.weight(1f), fontSize = 10.sp,text = "GHIACCIO")
-                            }
-                        }
-                    }
+                    TitleText(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxWidth(),
+                        text = uiState.viabilitaPage.testoSegnalazione)
 
                 }
+
+                ElevatedCard(
+                    modifier = Modifier.padding(5.dp),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        TitleText(text = "A15 PARMA - LA SPEZIA")
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(modifier = Modifier.weight(2f), fontSize = 9.sp,text = "", maxLines = 1)
+                            Text(modifier = Modifier.weight(1f), fontSize = 9.sp,text = "VENTO", maxLines = 1)
+                            Text(modifier = Modifier.weight(1f), fontSize = 9.sp,text = "PIOGGIA", maxLines = 1)
+                            Text(modifier = Modifier.weight(1f), fontSize = 9.sp,text = "NEBBIA", maxLines = 1)
+                            Text(modifier = Modifier.weight(1f), fontSize = 9.sp,text = "NEVE", maxLines = 1)
+                            Text(modifier = Modifier.weight(1f), fontSize = 9.sp,text = "GHIACCIO", maxLines = 1)
+                        }
+                    }
+                }
+
             }
         }
+        PullRefreshIndicator(isRefreshing, state, Modifier.align(Alignment.TopCenter))
+
     }
 }

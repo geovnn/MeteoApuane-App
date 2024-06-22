@@ -23,6 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.domain.models.ProvinciaPageSuccessivi
+import com.geovnn.meteoapuane.presentation.utils.composables.BodyText
+import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
 
 @Composable
 fun PaginaSuccessivi(
@@ -35,23 +37,27 @@ fun PaginaSuccessivi(
         ElevatedCard(
             modifier = Modifier.padding(5.dp),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        ) {
-            Text(modifier = Modifier.padding(5.dp),text = uiState.testo)
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+            )        ) {
+            BodyText(modifier = Modifier.padding(5.dp),text = uiState.testo)
         }
         ElevatedCard(
             modifier = Modifier.padding(5.dp),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        ) {
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+            )        ) {
             Column(modifier = Modifier.padding(5.dp)) {
-                Text(modifier = Modifier.fillMaxWidth(), text = uiState.data1, fontWeight = FontWeight.Bold, fontSize = 18.sp, textAlign = TextAlign.Center)
+                TitleText(modifier = Modifier.fillMaxWidth(), text = uiState.data1)
                 Row(
                     modifier = Modifier
                         .height(50.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(5f)
 //                            .fillMaxSize()
@@ -73,7 +79,7 @@ fun PaginaSuccessivi(
                         .height(50.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(5f)
 //                            .fillMaxSize()
@@ -95,7 +101,7 @@ fun PaginaSuccessivi(
                         .height(50.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(5f)
 //                            .fillMaxSize()
@@ -117,14 +123,14 @@ fun PaginaSuccessivi(
                         .height(50.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(5f)
 //                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "ATTENDIBILITA:",
                     )
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(1f)
 //                            .fillMaxSize()
@@ -137,16 +143,18 @@ fun PaginaSuccessivi(
         ElevatedCard(
             modifier = Modifier.padding(5.dp),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        ) {
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor =  MaterialTheme.colorScheme.onPrimaryContainer,
+            )        ) {
             Column(modifier = Modifier.padding(5.dp)) {
-                Text(modifier = Modifier.fillMaxWidth(), text = uiState.data2, fontWeight = FontWeight.Bold, fontSize = 18.sp, textAlign = TextAlign.Center)
+                TitleText(modifier = Modifier.fillMaxWidth(), text = uiState.data2)
                 Row(
                     modifier = Modifier
                         .height(50.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(5f)
 //                            .fillMaxSize()
@@ -168,7 +176,7 @@ fun PaginaSuccessivi(
                         .height(50.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(5f)
 //                            .fillMaxSize()
@@ -190,7 +198,7 @@ fun PaginaSuccessivi(
                         .height(50.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(5f)
 //                            .fillMaxSize()
@@ -212,14 +220,14 @@ fun PaginaSuccessivi(
                         .height(50.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(5f)
 //                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "ATTENDIBILITA:",
                     )
-                    Text(
+                    BodyText(
                         modifier = Modifier
                             .weight(1f)
 //                            .fillMaxSize()

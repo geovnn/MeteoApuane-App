@@ -23,6 +23,7 @@ import java.net.URL
 class MeteoapuaneScrape {
 
     private suspend fun getBitmapFromUrl(url: String): Bitmap? {
+        println("getBitmap")
         return withContext(Dispatchers.IO) {
             try {
                 val inputStream: InputStream = URL(url).openStream()
@@ -36,7 +37,7 @@ class MeteoapuaneScrape {
 
     suspend fun getHomeData(): HomePage {
         return withContext(Dispatchers.IO) {
-            val document = Jsoup.connect("https://www.meteoapuane.it/").get()
+            val document = Jsoup.connect("https://www.meteoapuane.it/").timeout(10 * 1000).get()
             val txtUltimaModifica = document.select(".aggiornamento")[1].text()
             val urlImgAllerta1 = "https://www.meteoapuane.it/" + document.select(".tabellaprincipale > tbody:nth-child(3) > tr:nth-child(6) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(1) > img:nth-child(1)").attr("src")
             val urlImgAllerta2 = "https://www.meteoapuane.it/" + document.select(".tabellaprincipale > tbody:nth-child(3) > tr:nth-child(6) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > div:nth-child(3) > a:nth-child(2) > img:nth-child(1)").attr("src")
@@ -94,7 +95,7 @@ class MeteoapuaneScrape {
     suspend fun getProvinciaData(): ProvinciaPage {
         return withContext(Dispatchers.IO) {
             val url = "https://www.meteoapuane.it/previsioni.php"
-            val document = Jsoup.connect(url).get()
+            val document = Jsoup.connect(url).timeout(10 * 1000).get()
             val ultimaModifica = document.select(".aggiornamento")[0].text()
             val deferredSfondo = async { getBitmapFromUrl("https://www.meteoapuane.it/img/apuane_previ.jpg") }
             // OGGI
@@ -1275,7 +1276,7 @@ class MeteoapuaneScrape {
     suspend fun getConfiniData(): ConfiniPage {
         return withContext(Dispatchers.IO) {
             val url = "https://www.meteoapuane.it/3confini.php"
-            val document = Jsoup.connect(url).get()
+            val document = Jsoup.connect(url).timeout(10 * 1000).get()
 
             val testoUltimaModifica =
                 "Aggiornamento del: " + document.select("div.aggiornamento > strong:nth-child(1)")
@@ -2057,7 +2058,7 @@ class MeteoapuaneScrape {
 
     suspend fun getMontagnaData(): MontagnaPage {
         return withContext(Dispatchers.IO) {
-            val document = Jsoup.connect("https://www.meteoapuane.it/montagna.php").get()
+            val document = Jsoup.connect("https://www.meteoapuane.it/montagna.php").timeout(10 * 1000).get()
             val testo = document.select("td.testo2 > span:nth-child(5)").text()
             val testoUltimaModifica =
                 "Aggiornamento del " + document.select(".Stile3 > strong:nth-child(1)")
@@ -2229,13 +2230,15 @@ class MeteoapuaneScrape {
 
     suspend fun getViabilitaData(): ViabilitaPage {
         return withContext(Dispatchers.IO) {
+            println("QUA INIZIA CHIAMATA")
 
-            val document = Jsoup.connect("https://www.meteoapuane.it/montagna.php").get()
+            val document = Jsoup.connect("https://www.meteoapuane.it/montagna.php").timeout(10 * 1000).get()
             val documentPanel =
-                Jsoup.connect("https://www.meteoapuane.it/ledpanel/prova.php").get()
+                Jsoup.connect("https://www.meteoapuane.it/ledpanel/prova.php").timeout(10 * 1000).get()
             val testoSegnalazione =
                 documentPanel.select("body > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > span:nth-child(1)")
                     .text()
+            println("QUA INIZIA CARICAMENTO IMMAGINI")
 //                val imgSegnalazioneGrande = getBitmapFromUrl("https://www.meteoapuane.it/"+documentPanel.select("body > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > img:nth-child(2)").first()?.select("img")?.attr("src"))
             val deferredImgSegnalazionePiccola1 = async {
                 getBitmapFromUrl(
@@ -2489,6 +2492,7 @@ class MeteoapuaneScrape {
                         .first()?.select("img")?.attr("src")
                 )
             }
+            println("QUA COMINCIA AD ASPETTARE IL CARICAMENTO")
             val imgSegnalazionePiccola1 = deferredImgSegnalazionePiccola1.await()
             val imgSegnalazionePiccola2 = deferredImgSegnalazionePiccola2.await()
             val imgA15LaspeziaVento = deferredImgA15LaspeziaVento.await()
@@ -2531,7 +2535,7 @@ class MeteoapuaneScrape {
             val imgA12SarzanaNebbia = deferredImgA12SarzanaNebbia.await()
             val imgA12SarzanaNeve = deferredImgA12SarzanaNeve.await()
             val imgA12SarzanaGhiaccio = deferredImgA12SarzanaGhiaccio.await()
-
+            println("QUA CI SIAMO E RITORNA UI")
             ViabilitaPage(
                 testoSegnalazione = testoSegnalazione,
                 imgSegnalazioneGrande = null,

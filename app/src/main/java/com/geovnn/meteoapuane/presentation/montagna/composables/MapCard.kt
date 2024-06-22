@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -77,31 +78,51 @@ fun MapCard(
 //                .border(0.5.dp,MaterialTheme.colorScheme.outline,RoundedCornerShape(5))
                 .fillMaxSize(),
             onClick = { /*TODO*/ },
-            shape = RoundedCornerShape(5)
+            shape = MaterialTheme.shapes.small,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            )
         ) {
             Column(
                 modifier = modifier
                     .fillMaxSize(),
             ) {
-                Text(
+                AutoResizeText(
                     modifier= Modifier
                         .weight(1f)
+                        .padding(horizontal = 2.dp)
                         .fillMaxSize(),
                     text = "$titolo - $altitudine",
-                    fontSize = fontSizeTitolo,
+                    fontSizeRange = FontSizeRange(
+                        min = MaterialTheme.typography.labelSmall.fontSize,
+                        max = MaterialTheme.typography.titleLarge.fontSize,
+                    ),
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    maxLines = 1
                 )
                 Row(
                     modifier= Modifier
-                        .weight(3f)
+                        .weight(1f)
                         .fillMaxSize()
                 ) {
                     Column(
                         modifier= Modifier.weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = data1, fontSize = fontSizeData)
+                        AutoResizeText(
+                            modifier= Modifier
+                                .weight(1f)
+                                .fillMaxSize(),
+                            text = data1,
+                            fontSizeRange = FontSizeRange(
+                                min = MaterialTheme.typography.labelSmall.fontSize,
+                                max = MaterialTheme.typography.titleLarge.fontSize,
+                            ),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
+                        )
                         Image(
                             modifier = Modifier
                                 .size(iconSize)
@@ -112,7 +133,18 @@ fun MapCard(
                         modifier= Modifier.weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = data2, fontSize = fontSizeData)
+                        AutoResizeText(
+                            modifier= Modifier
+                                .weight(1f)
+                                .fillMaxSize(),
+                            text = data2,
+                            fontSizeRange = FontSizeRange(
+                                min = MaterialTheme.typography.labelSmall.fontSize,
+                                max = MaterialTheme.typography.titleLarge.fontSize,
+                            ),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
+                        )
                         Image(
                             modifier = Modifier
                                 .size(iconSize)
@@ -123,7 +155,18 @@ fun MapCard(
                         modifier= Modifier.weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = data3, fontSize = fontSizeData)
+                        AutoResizeText(
+                            modifier= Modifier
+                                .weight(1f)
+                                .fillMaxSize(),
+                            text = data3,
+                            fontSizeRange = FontSizeRange(
+                                min = MaterialTheme.typography.labelSmall.fontSize,
+                                max = MaterialTheme.typography.titleLarge.fontSize,
+                            ),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
+                        )
                         Image(
                             modifier = Modifier
                                 .size(iconSize)
@@ -143,7 +186,10 @@ fun MapCard(
 //                    text = "Zero Termico $zeroTermico Altezza Neve $altezzaNeve",
                     text = "Zero Termico: $zeroTermico | Altezza Neve: $altezzaNeve",
                     maxLines = 1,
-                    modifier = Modifier.weight(1f).fillMaxSize(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 2.dp)
+                        .fillMaxSize(),
                     fontSizeRange = FontSizeRange(
                         min = 1.sp,
                         max = 100.sp,
