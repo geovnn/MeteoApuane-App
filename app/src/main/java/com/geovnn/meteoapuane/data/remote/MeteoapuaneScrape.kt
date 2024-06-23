@@ -2232,7 +2232,7 @@ class MeteoapuaneScrape {
         return withContext(Dispatchers.IO) {
             println("QUA INIZIA CHIAMATA")
 
-            val document = Jsoup.connect("https://www.meteoapuane.it/montagna.php").timeout(10 * 1000).get()
+            val document = Jsoup.connect("https://www.meteoapuane.it/viabilita.php").timeout(10 * 1000).get()
             val documentPanel =
                 Jsoup.connect("https://www.meteoapuane.it/ledpanel/prova.php").timeout(10 * 1000).get()
             val testoSegnalazione =
@@ -2535,7 +2535,17 @@ class MeteoapuaneScrape {
             val imgA12SarzanaNebbia = deferredImgA12SarzanaNebbia.await()
             val imgA12SarzanaNeve = deferredImgA12SarzanaNeve.await()
             val imgA12SarzanaGhiaccio = deferredImgA12SarzanaGhiaccio.await()
-            println("QUA CI SIAMO E RITORNA UI")
+
+            val urlVideoA15SantoStefano = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
+            val urlVideoA15Pontremoli = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
+            val urlVideoA15Montelungo = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(3) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
+            val urlVideoA15Tugo = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(4) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
+
+            val urlVideoA12Ceparana = document.select("table.testo2:nth-child(11) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
+            val urlVideoA12Luni = document.select("table.testo2:nth-child(11) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
+            val urlVideoA12Avenza = document.select("table.testo2:nth-child(11) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(3) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
+            val urlVideoA12Cinquale = document.select("table.testo2:nth-child(11) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(4) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
+
             ViabilitaPage(
                 testoSegnalazione = testoSegnalazione,
                 imgSegnalazioneGrande = null,
@@ -2580,7 +2590,16 @@ class MeteoapuaneScrape {
                 imgA12SarzanaPioggia = imgA12SarzanaPioggia,
                 imgA12SarzanaNebbia = imgA12SarzanaNebbia,
                 imgA12SarzanaNeve = imgA12SarzanaNeve,
-                imgA12SarzanaGhiaccio = imgA12SarzanaGhiaccio
+                imgA12SarzanaGhiaccio = imgA12SarzanaGhiaccio,
+                urlVideoA15SantoStefano = urlVideoA15SantoStefano,
+                urlVideoA15Pontremoli = urlVideoA15Pontremoli,
+                urlVideoA15Montelungo = urlVideoA15Montelungo,
+                urlVideoA15Tugo = urlVideoA15Tugo,
+                urlVideoA12Ceparana = urlVideoA12Ceparana,
+                urlVideoA12Luni = urlVideoA12Luni,
+                urlVideoA12Avenza = urlVideoA12Avenza,
+                urlVideoA12Cinquale = urlVideoA12Cinquale,
+
             )
         }
     }

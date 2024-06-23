@@ -23,6 +23,7 @@ fun TitleText(
         fontSize = MaterialTheme.typography.titleLarge.fontSize,
         fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
         fontFamily = MaterialTheme.typography.titleLarge.fontFamily,
-        fontStyle = MaterialTheme.typography.titleLarge.fontStyle
+        fontStyle = MaterialTheme.typography.titleLarge.fontStyle,
+//        maxLines = 2
     )
 }

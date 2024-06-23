@@ -78,8 +78,8 @@ fun ConfiniScreen(
                 modifier = Modifier
                     .width(64.dp)
                     .align(Alignment.Center),
-                color = MaterialTheme.colorScheme.secondary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.onPrimary,
             )
         } else if (uiState.error!="") {
             AlertDialog(

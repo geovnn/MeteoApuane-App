@@ -255,15 +255,18 @@ fun Navigation() {
                                     modifier = Modifier
                                         .padding(2.dp)
                                         .clickable {
-                                            selectedItemIndex = index
-                                            scope.launch {
-                                                navController.navigate(item.destination) {
-                                                    popUpTo(0) {
-                                                        inclusive = true
-                                                        saveState = true
+                                            if (selectedItemIndex!=index) {
+                                                selectedItemIndex = index
+                                                scope.launch {
+                                                    navController.navigate(item.destination) {
+                                                        popUpTo(0) {
+                                                            inclusive = true
+                                                            saveState = true
+                                                        }
                                                     }
                                                 }
                                             }
+
                                         },
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
@@ -278,12 +281,14 @@ fun Navigation() {
                                                 shape = MaterialTheme.shapes.large
                                             ),
                                         onClick = {
-                                            selectedItemIndex = index
-                                            scope.launch {
-                                                navController.navigate(item.destination) {
-                                                    popUpTo(0) {
-                                                        inclusive = true
-                                                        saveState = true
+                                            if (selectedItemIndex!=index) {
+                                                selectedItemIndex = index
+                                                scope.launch {
+                                                    navController.navigate(item.destination) {
+                                                        popUpTo(0) {
+                                                            inclusive = true
+                                                            saveState = true
+                                                        }
                                                     }
                                                 }
                                             }

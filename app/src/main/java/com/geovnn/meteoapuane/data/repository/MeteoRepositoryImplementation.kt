@@ -65,4 +65,6 @@ class MeteoRepositoryImplementation @Inject constructor(
             emit(Resource.Error(message = e.message.toString()))
         }
     }
+
+
 }

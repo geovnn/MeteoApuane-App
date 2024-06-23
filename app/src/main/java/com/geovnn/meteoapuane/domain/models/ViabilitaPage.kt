@@ -55,4 +55,15 @@ data class ViabilitaPage(
     val imgA12SarzanaNebbia: Bitmap? = null,
     val imgA12SarzanaNeve: Bitmap? = null,
     val imgA12SarzanaGhiaccio: Bitmap? = null,
+
+    val urlVideoA15SantoStefano: String = "",
+    val urlVideoA15Pontremoli: String = "",
+    val urlVideoA15Montelungo: String = "",
+    val urlVideoA15Tugo: String = "",
+
+    val urlVideoA12Ceparana: String = "",
+    val urlVideoA12Luni: String = "",
+    val urlVideoA12Avenza: String = "",
+    val urlVideoA12Cinquale: String = "",
+
 )
