@@ -4,6 +4,7 @@ import com.geovnn.meteoapuane.domain.utils.Resource
 import com.geovnn.meteoapuane.data.remote.MeteoapuaneScrape
 import com.geovnn.meteoapuane.domain.models.ConfiniPage
 import com.geovnn.meteoapuane.domain.models.HomePage
+import com.geovnn.meteoapuane.domain.models.IncendiPage
 import com.geovnn.meteoapuane.domain.models.MontagnaPage
 import com.geovnn.meteoapuane.domain.models.ProvinciaPage
 import com.geovnn.meteoapuane.domain.models.ViabilitaPage
@@ -67,4 +68,13 @@ class MeteoRepositoryImplementation @Inject constructor(
     }
 
 
+    override fun getIncendiPage(): Flow<Resource<IncendiPage>> = flow {
+        emit(Resource.Loading())
+        try {
+            val incendiData = api.getIncendiData()
+            emit(Resource.Success(data = incendiData))
+        } catch (e: Exception) {
+            emit(Resource.Error(message = e.message.toString()))
+        }
+    }
 }

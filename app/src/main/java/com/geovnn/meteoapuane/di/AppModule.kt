@@ -5,6 +5,7 @@ import com.geovnn.meteoapuane.data.repository.MeteoRepositoryImplementation
 import com.geovnn.meteoapuane.domain.repository.MeteoRepository
 import com.geovnn.meteoapuane.domain.use_cases.GetConfiniPage
 import com.geovnn.meteoapuane.domain.use_cases.GetHomePage
+import com.geovnn.meteoapuane.domain.use_cases.GetIncendiPage
 import com.geovnn.meteoapuane.domain.use_cases.GetMontagnaPage
 import com.geovnn.meteoapuane.domain.use_cases.GetProvinciaPage
 import com.geovnn.meteoapuane.domain.use_cases.GetViabilitaPage
@@ -58,6 +59,12 @@ object AppModule {
     @Singleton
     fun provideGetViabilitaPageUseCase(repository: MeteoRepository): GetViabilitaPage {
         return GetViabilitaPage(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetIncendiPageUseCase(repository: MeteoRepository): GetIncendiPage {
+        return GetIncendiPage(repository)
     }
 
 }

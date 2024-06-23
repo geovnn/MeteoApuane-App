@@ -97,6 +97,7 @@ import com.geovnn.meteoapuane.presentation.confini.ConfiniViewModel
 import com.geovnn.meteoapuane.presentation.home.HomeScreen
 import com.geovnn.meteoapuane.presentation.home.HomeViewModel
 import com.geovnn.meteoapuane.presentation.incendi.IncendiScreen
+import com.geovnn.meteoapuane.presentation.incendi.IncendiViewModel
 import com.geovnn.meteoapuane.presentation.montagna.MontagnaScreen
 import com.geovnn.meteoapuane.presentation.montagna.MontagnaViewModel
 import com.geovnn.meteoapuane.presentation.nowcasting.NowcastingScreen
@@ -116,12 +117,14 @@ fun Navigation() {
     val confiniViewModel = hiltViewModel<ConfiniViewModel>()
     val montagnaViewModel = hiltViewModel<MontagnaViewModel>()
     val viabilitaViewModel = hiltViewModel<ViabilitaViewModel>()
+    val incendiViewModel = hiltViewModel<IncendiViewModel>()
 
     val homeState by homeViewModel.state.collectAsState()
     val provinciaState by provinciaViewModel.state.collectAsState()
     val confiniState by confiniViewModel.state.collectAsState()
     val montagnaState by montagnaViewModel.state.collectAsState()
     val viabilitaState by viabilitaViewModel.state.collectAsState()
+    val incendiState by incendiViewModel.state.collectAsState()
     val navController = rememberNavController()
     val drawerItems = listOf(
         DrawerItem(
@@ -362,7 +365,10 @@ fun Navigation() {
                     )
                 }
                 composable(route = Screen.IncendiScreen.route) {
-                    IncendiScreen()
+                    IncendiScreen(
+                        uiState = incendiState,
+                        refreshData = { incendiViewModel.updateData() }
+                    )
                 }
                 composable(route = Screen.WebcamScreen.route) {
                     WebcamScreen()

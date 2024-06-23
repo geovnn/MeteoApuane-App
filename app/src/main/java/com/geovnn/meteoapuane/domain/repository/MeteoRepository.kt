@@ -3,6 +3,7 @@ package com.geovnn.meteoapuane.domain.repository
 import com.geovnn.meteoapuane.domain.utils.Resource
 import com.geovnn.meteoapuane.domain.models.ConfiniPage
 import com.geovnn.meteoapuane.domain.models.HomePage
+import com.geovnn.meteoapuane.domain.models.IncendiPage
 import com.geovnn.meteoapuane.domain.models.MontagnaPage
 import com.geovnn.meteoapuane.domain.models.ProvinciaPage
 import com.geovnn.meteoapuane.domain.models.ViabilitaPage
@@ -21,4 +22,5 @@ interface MeteoRepository {
 
     fun getViabilitaPage(): Flow<Resource<ViabilitaPage>>
 
+    fun getIncendiPage(): Flow<Resource<IncendiPage>>
 }

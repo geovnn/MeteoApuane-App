@@ -12,6 +12,7 @@ import com.geovnn.meteoapuane.domain.models.ProvinciaPageTab
 import com.geovnn.meteoapuane.domain.models.ProvinciaPageSuccessivi
 import com.geovnn.meteoapuane.domain.models.ViabilitaPage
 import com.geovnn.meteoapuane.domain.models.ConfiniPageTab
+import com.geovnn.meteoapuane.domain.models.IncendiPage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -2603,4 +2604,49 @@ class MeteoapuaneScrape {
             )
         }
     }
+
+    suspend fun getIncendiData(): IncendiPage {
+        return withContext(Dispatchers.IO) {
+            val document = Jsoup.connect("https://www.meteoapuane.it/incendi.php").timeout(10 * 1000).get()
+            val txtDataOggi = document.select("td.testo2 > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > strong:nth-child(1)")[0].text()
+            val imgCostaOggi = "https://www.meteoapuane.it/" + document.select("td.testo2 > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgLunigianaOggi = "https://www.meteoapuane.it/" + document.select("td.testo2 > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(5) > img:nth-child(1)").attr("src")
+            val txtDataDomani = document.select("td.testo2 > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(1) > strong:nth-child(1)")[0].text()
+            val imgCostaDomani = "https://www.meteoapuane.it/" + document.select("td.testo2 > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgLunigianaDomani = "https://www.meteoapuane.it/" + document.select("td.testo2 > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(5) > img:nth-child(1)").attr("src")
+            val txtDataDopodomani = document.select("td.testo2 > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(1) > strong:nth-child(1)")[0].text()
+            val imgCostaDopodomani = "https://www.meteoapuane.it/" + document.select("td.testo2 > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgLunigianaDopodomani = "https://www.meteoapuane.it/" + document.select("td.testo2 > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(5) > img:nth-child(1)").attr("src")
+
+            // Avviare il caricamento delle immagini in parallelo
+            val deferredImgCostaOggi = async { getBitmapFromUrl(imgCostaOggi) }
+            val deferredImgLunigianaOggi = async { getBitmapFromUrl(imgLunigianaOggi) }
+            val deferredImgCostaDomani = async { getBitmapFromUrl(imgCostaDomani) }
+            val deferredImgLunigianaDomani = async { getBitmapFromUrl(imgLunigianaDomani) }
+            val deferredImgCostaDopodomani = async { getBitmapFromUrl(imgCostaDopodomani) }
+            val deferredImgLunigianaDopodomani = async { getBitmapFromUrl(imgLunigianaDopodomani) }
+
+            // Attendere il completamento di tutti i caricamenti
+            val img1 = deferredImgCostaOggi.await()
+            val img2 = deferredImgLunigianaOggi.await()
+            val img3 = deferredImgCostaDomani.await()
+            val img4 = deferredImgLunigianaDomani.await()
+            val img5 = deferredImgCostaDopodomani.await()
+            val img6 = deferredImgLunigianaDopodomani.await()
+
+
+            IncendiPage(
+                dataOggi = txtDataOggi,
+                costaOggi = img1,
+                lunigianaOggi = img2,
+                dataDomani = txtDataDomani,
+                costaDomani = img3,
+                lunigianaDomani = img4,
+                costaDopodomani = img5,
+                lunigianaDopodomani = img6,
+                dataDopodomani = txtDataDopodomani
+            )
+        }
+    }
+
 }
