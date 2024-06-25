@@ -8,6 +8,7 @@ import com.geovnn.meteoapuane.domain.models.IncendiPage
 import com.geovnn.meteoapuane.domain.models.MontagnaPage
 import com.geovnn.meteoapuane.domain.models.ProvinciaPage
 import com.geovnn.meteoapuane.domain.models.ViabilitaPage
+import com.geovnn.meteoapuane.domain.models.WebcamPage
 import com.geovnn.meteoapuane.domain.repository.MeteoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -73,6 +74,16 @@ class MeteoRepositoryImplementation @Inject constructor(
         try {
             val incendiData = api.getIncendiData()
             emit(Resource.Success(data = incendiData))
+        } catch (e: Exception) {
+            emit(Resource.Error(message = e.message.toString()))
+        }
+    }
+
+    override fun getWebcamPage(): Flow<Resource<WebcamPage>> = flow {
+        emit(Resource.Loading())
+        try {
+            val webcamData = api.getWebcamData()
+            emit(Resource.Success(data = webcamData))
         } catch (e: Exception) {
             emit(Resource.Error(message = e.message.toString()))
         }

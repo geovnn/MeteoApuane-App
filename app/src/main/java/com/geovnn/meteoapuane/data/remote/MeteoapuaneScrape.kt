@@ -13,12 +13,15 @@ import com.geovnn.meteoapuane.domain.models.ProvinciaPageSuccessivi
 import com.geovnn.meteoapuane.domain.models.ViabilitaPage
 import com.geovnn.meteoapuane.domain.models.ConfiniPageTab
 import com.geovnn.meteoapuane.domain.models.IncendiPage
+import com.geovnn.meteoapuane.domain.models.WebcamPage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import java.io.BufferedInputStream
 import java.io.IOException
 import java.io.InputStream
+import java.net.HttpURLConnection
 import java.net.URL
 
 class MeteoapuaneScrape {
@@ -26,15 +29,57 @@ class MeteoapuaneScrape {
     private suspend fun getBitmapFromUrl(url: String): Bitmap? {
         println("getBitmap")
         return withContext(Dispatchers.IO) {
-            try {
-                val inputStream: InputStream = URL(url).openStream()
-                BitmapFactory.decodeStream(inputStream)
-            } catch (e: IOException) {
-                e.printStackTrace()
-                null
+            var connection: HttpURLConnection? = null
+            var inputStream: InputStream? = null
+            val maxRetries = 3
+            var attempts = 0
+
+            // Retry loop
+            while (attempts < maxRetries) {
+                try {
+                    // Ensure HTTPS protocol
+                    val formattedUrl = if (url.startsWith("http://")) {
+                        url.replace("http://", "https://")
+                    } else {
+                        url
+                    }
+
+                    val urlObj = URL(formattedUrl)
+                    connection = urlObj.openConnection() as HttpURLConnection
+                    connection.instanceFollowRedirects = true
+                    connection.connectTimeout = 10000
+                    connection.readTimeout = 10000
+
+                    // Check response code
+                    val responseCode = connection.responseCode
+                    if (responseCode != HttpURLConnection.HTTP_OK) {
+                        println("HTTP error code: $responseCode")
+                        return@withContext null
+                    }
+
+                    inputStream = BufferedInputStream(connection.inputStream)
+                    return@withContext BitmapFactory.decodeStream(inputStream)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    attempts++
+                    if (attempts >= maxRetries) {
+                        println("Failed after $attempts attempts")
+                        return@withContext null
+                    }
+                } finally {
+                    try {
+                        inputStream?.close()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                    connection?.disconnect()
+                }
             }
+            null
         }
     }
+
+
 
     suspend fun getHomeData(): HomePage {
         return withContext(Dispatchers.IO) {
@@ -2649,4 +2694,166 @@ class MeteoapuaneScrape {
         }
     }
 
+    suspend fun getWebcamData(): WebcamPage {
+        return withContext(Dispatchers.IO) {
+            val document = Jsoup.connect("https://www.meteoapuane.it/webcam.php").timeout(10 * 1000).get()
+            val imgMassaCentro = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgMoncigoli = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgCanevara = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgMonteBorla = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgVinca = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgMarinaDiMassa = document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgMarinaDiCarrara = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > div:nth-child(2) > a:nth-child(2) > img:nth-child(1)").attr("src")
+            val imgAvenza = document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgFivizzano = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgVillafrancaLunigiana = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgBagnone = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgSassalbo = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgMonteBosta = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgZumZeri = document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgPassoDelCerreto1 = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgPassoDelCerreto2 = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgCerretoLaghi = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgRigoso = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgPratospilla1 = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgPratospilla2 = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgMonteCusna = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgLagoSanto = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgValditacca = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgTrefiumi = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgBorgoValDiTaro = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > a:nth-child(3)").attr("src")
+            val imgGhiareDiBerceto = document.select("table.testo2:nth-child(6) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgPonzanoMagra = document.select("table.testo2:nth-child(8) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > a:nth-child(3)").attr("src")
+            val imgBoccaDiMagra = document.select("table.testo2:nth-child(8) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgLerici = document.select("table.testo2:nth-child(8) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgPortovenere = document.select("table.testo2:nth-child(8) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgSestaGodano = document.select("table.testo2:nth-child(8) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgVareseLigure = document.select("table.testo2:nth-child(8) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgPietrasanta = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgLidoDiCamaiore1 = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgLidoDiCamaiore2 = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgViareggio = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgCapanneDiCareggine = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > a:nth-child(3) > img:nth-child(1)").attr("src")
+            val imgMonteArgegna = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(3) > a:nth-child(3) > img:nth-child(1)").attr("src")
+
+            val deferredImgMassaCentro = async { getBitmapFromUrl(imgMassaCentro) }
+            val deferredImgMoncigoli = async { getBitmapFromUrl(imgMoncigoli) }
+            val deferredImgCanevara = async { getBitmapFromUrl(imgCanevara) }
+            val deferredImgMonteBorla = async { getBitmapFromUrl(imgMonteBorla) }
+            val deferredImgVinca = async { getBitmapFromUrl(imgVinca) }
+            val deferredImgMarinaDiMassa = async { getBitmapFromUrl(imgMarinaDiMassa) }
+            val deferredImgMarinaDiCarrara = async { getBitmapFromUrl(imgMarinaDiCarrara) }
+            val deferredImgAvenza = async { getBitmapFromUrl(imgAvenza) }
+            val deferredImgFivizzano = async { getBitmapFromUrl(imgFivizzano) }
+            val deferredImgVillafrancaLunigiana = async { getBitmapFromUrl(imgVillafrancaLunigiana) }
+            val deferredImgBagnone = async { getBitmapFromUrl(imgBagnone) }
+            val deferredImgSassalbo = async { getBitmapFromUrl(imgSassalbo) }
+            val deferredImgMonteBosta = async { getBitmapFromUrl(imgMonteBosta) }
+            val deferredImgZumZeri = async { getBitmapFromUrl(imgZumZeri) }
+            val deferredImgPassoDelCerreto1 = async { getBitmapFromUrl(imgPassoDelCerreto1) }
+            val deferredImgPassoDelCerreto2 = async { getBitmapFromUrl(imgPassoDelCerreto2) }
+            val deferredImgCerretoLaghi = async { getBitmapFromUrl(imgCerretoLaghi) }
+            val deferredImgRigoso = async { getBitmapFromUrl(imgRigoso) }
+            val deferredImgPratospilla1 = async { getBitmapFromUrl(imgPratospilla1) }
+            val deferredImgPratospilla2 = async { getBitmapFromUrl(imgPratospilla2) }
+            val deferredImgMonteCusna = async { getBitmapFromUrl(imgMonteCusna) }
+            val deferredImgLagoSanto = async { getBitmapFromUrl(imgLagoSanto) }
+            val deferredImgValditacca = async { getBitmapFromUrl(imgValditacca) }
+            val deferredImgTrefiumi = async { getBitmapFromUrl(imgTrefiumi) }
+            val deferredImgBorgoValDiTaro = async { getBitmapFromUrl(imgBorgoValDiTaro) }
+            val deferredImgGhiareDiBerceto = async { getBitmapFromUrl(imgGhiareDiBerceto) }
+            val deferredImgPonzanoMagra= async { getBitmapFromUrl(imgPonzanoMagra) }
+            val deferredImgBoccaDiMagra = async { getBitmapFromUrl(imgBoccaDiMagra) }
+            val deferredImgLerici = async { getBitmapFromUrl(imgLerici) }
+            val deferredImgPortovenere = async { getBitmapFromUrl(imgPortovenere) }
+            val deferredImgSestaGodano = async { getBitmapFromUrl(imgSestaGodano) }
+            val deferredImgVareseLigure = async { getBitmapFromUrl(imgVareseLigure) }
+            val deferredImgPietrasanta = async { getBitmapFromUrl(imgPietrasanta) }
+            val deferredImgLidoDiCamaiore1 = async { getBitmapFromUrl(imgLidoDiCamaiore1) }
+            val deferredImgLidoDiCamaiore2 = async { getBitmapFromUrl(imgLidoDiCamaiore2) }
+            val deferredImgViareggio = async { getBitmapFromUrl(imgViareggio) }
+            val deferredImgCapanneDiCareggine= async { getBitmapFromUrl(imgCapanneDiCareggine) }
+            val deferredImgMonteArgegna = async { getBitmapFromUrl(imgMonteArgegna) }
+
+            val massaCentro = deferredImgMassaCentro.await()
+            val moncigoli = deferredImgMoncigoli.await()
+            val canevara = deferredImgCanevara.await()
+            val monteBorla = deferredImgMonteBorla.await()
+            val vinca = deferredImgVinca.await()
+            val marinaDiMassa = deferredImgMarinaDiMassa.await()
+            val marinaDiCarrara = deferredImgMarinaDiCarrara.await()
+            val avenza = deferredImgAvenza.await()
+            val fivizzano = deferredImgFivizzano.await()
+            val villafrancaLunigiana = deferredImgVillafrancaLunigiana.await()
+            val bagnone = deferredImgBagnone.await()
+            val sassalbo = deferredImgSassalbo.await()
+            val monteBosta = deferredImgMonteBosta.await()
+            val zumZeri = deferredImgZumZeri.await()
+            val passoDelCerreto1 = deferredImgPassoDelCerreto1.await()
+            val passoDelCerreto2 = deferredImgPassoDelCerreto2.await()
+            val cerretoLaghi = deferredImgCerretoLaghi.await()
+            val rigoso = deferredImgRigoso.await()
+            val pratospilla1 = deferredImgPratospilla1.await()
+            val pratospilla2 = deferredImgPratospilla2.await()
+            val monteCusna = deferredImgMonteCusna.await()
+            val lagoSanto = deferredImgLagoSanto.await()
+            val valditacca = deferredImgValditacca.await()
+            val trefiumi = deferredImgTrefiumi.await()
+            val borgoValDiTaro = deferredImgBorgoValDiTaro.await()
+            val ghiareDiBerceto = deferredImgGhiareDiBerceto.await()
+            val ponzanoMagra = deferredImgPonzanoMagra.await()
+            val boccaDiMagra = deferredImgBoccaDiMagra.await()
+            val lerici = deferredImgLerici.await()
+            val portovenere = deferredImgPortovenere.await()
+            val sestaGodano = deferredImgSestaGodano.await()
+            val vareseLigure = deferredImgVareseLigure.await()
+            val pietrasanta = deferredImgPietrasanta.await()
+            val lidoDiCamaiore1 = deferredImgLidoDiCamaiore1.await()
+            val lidoDiCamaiore2 = deferredImgLidoDiCamaiore2.await()
+            val viareggio = deferredImgViareggio.await()
+            val capanneDiCareggine = deferredImgCapanneDiCareggine.await()
+            val monteArgegna = deferredImgMonteArgegna.await()
+            WebcamPage(
+                massaCentro = massaCentro,
+                moncigoli = moncigoli,
+                canevara = canevara,
+                monteBorla = monteBorla,
+                vinca = vinca,
+                marinaDiMassa = marinaDiMassa,
+                marinaDiCarrara = marinaDiCarrara,
+                avenza = avenza,
+                fivizzano = fivizzano,
+                villafrancaLunigiana = villafrancaLunigiana,
+                bagnone = bagnone,
+                sassalbo = sassalbo,
+                monteBosta = monteBosta,
+                zumZeri = zumZeri,
+                passoDelCerreto1 = passoDelCerreto1,
+                passoDelCerreto2 = passoDelCerreto2,
+                cerretoLaghi = cerretoLaghi,
+                rigoso = rigoso,
+                pratospilla1 = pratospilla1,
+                pratospilla2 = pratospilla2,
+                monteCusna = monteCusna,
+                lagoSanto = lagoSanto,
+                valditacca = valditacca,
+                trefiumi = trefiumi,
+                borgoValDiTaro = borgoValDiTaro,
+                ghiareDiBerceto = ghiareDiBerceto,
+                ponzanoMagra = ponzanoMagra,
+                boccaDiMagra = boccaDiMagra,
+                lerici = lerici,
+                portovenere = portovenere,
+                sestaGodano = sestaGodano,
+                vareseLigure = vareseLigure,
+                pietrasanta = pietrasanta,
+                lidoDiCamaiore1 = lidoDiCamaiore1,
+                lidoDiCamaiore2 = lidoDiCamaiore2,
+                viareggio = viareggio,
+                capanneDiCareggine = capanneDiCareggine,
+                monteArgegna = monteArgegna,
+
+            )
+        }
+    }
 }

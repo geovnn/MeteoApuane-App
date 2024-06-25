@@ -9,6 +9,7 @@ import com.geovnn.meteoapuane.domain.use_cases.GetIncendiPage
 import com.geovnn.meteoapuane.domain.use_cases.GetMontagnaPage
 import com.geovnn.meteoapuane.domain.use_cases.GetProvinciaPage
 import com.geovnn.meteoapuane.domain.use_cases.GetViabilitaPage
+import com.geovnn.meteoapuane.domain.use_cases.GetWebcamPage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,6 +66,12 @@ object AppModule {
     @Singleton
     fun provideGetIncendiPageUseCase(repository: MeteoRepository): GetIncendiPage {
         return GetIncendiPage(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetWebcamPageUseCase(repository: MeteoRepository): GetWebcamPage {
+        return GetWebcamPage(repository)
     }
 
 }

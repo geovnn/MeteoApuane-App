@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(
     private var updateJob: Job? = null
 
     init {
-        updateData()
+//        updateData()
     }
 
     fun updateData() {

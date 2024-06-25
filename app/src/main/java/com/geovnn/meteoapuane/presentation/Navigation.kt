@@ -106,6 +106,7 @@ import com.geovnn.meteoapuane.presentation.provincia.ProvinciaViewModel
 import com.geovnn.meteoapuane.presentation.viabilita.ViabilitaScreen
 import com.geovnn.meteoapuane.presentation.viabilita.ViabilitaViewModel
 import com.geovnn.meteoapuane.presentation.webcam.WebcamScreen
+import com.geovnn.meteoapuane.presentation.webcam.WebcamViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -118,6 +119,8 @@ fun Navigation() {
     val montagnaViewModel = hiltViewModel<MontagnaViewModel>()
     val viabilitaViewModel = hiltViewModel<ViabilitaViewModel>()
     val incendiViewModel = hiltViewModel<IncendiViewModel>()
+    val webcamViewModel = hiltViewModel<WebcamViewModel>()
+
 
     val homeState by homeViewModel.state.collectAsState()
     val provinciaState by provinciaViewModel.state.collectAsState()
@@ -125,6 +128,7 @@ fun Navigation() {
     val montagnaState by montagnaViewModel.state.collectAsState()
     val viabilitaState by viabilitaViewModel.state.collectAsState()
     val incendiState by incendiViewModel.state.collectAsState()
+    val webcamState by webcamViewModel.state.collectAsState()
     val navController = rememberNavController()
     val drawerItems = listOf(
         DrawerItem(
@@ -371,7 +375,10 @@ fun Navigation() {
                     )
                 }
                 composable(route = Screen.WebcamScreen.route) {
-                    WebcamScreen()
+                    WebcamScreen(
+                        uiState = webcamState,
+                        refreshData = { webcamViewModel.updateData() }
+                    )
                 }
                 composable(route = Screen.NowcastingScreen.route) {
                     NowcastingScreen()

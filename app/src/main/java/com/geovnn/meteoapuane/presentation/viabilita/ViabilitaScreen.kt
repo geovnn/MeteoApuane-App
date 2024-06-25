@@ -34,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,7 +78,9 @@ fun ViabilitaScreen(
 //    }
 
     var fullscreenUri by remember { mutableStateOf<String?>(null) }
-
+    LaunchedEffect(Unit) {
+        refreshData()
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()

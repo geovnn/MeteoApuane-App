@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,6 +69,9 @@ fun IncendiScreen(
         refreshData()
         delay(1000)
         isRefreshing = false
+    }
+    LaunchedEffect(Unit) {
+        refreshData()
     }
     val state = rememberPullRefreshState(isRefreshing, ::refresh)
     Box(
