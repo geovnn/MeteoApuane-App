@@ -101,6 +101,8 @@ import com.geovnn.meteoapuane.presentation.incendi.IncendiViewModel
 import com.geovnn.meteoapuane.presentation.montagna.MontagnaScreen
 import com.geovnn.meteoapuane.presentation.montagna.MontagnaViewModel
 import com.geovnn.meteoapuane.presentation.nowcasting.NowcastingScreen
+import com.geovnn.meteoapuane.presentation.nowcasting.NowcastingState
+import com.geovnn.meteoapuane.presentation.nowcasting.NowcastingViewModel
 import com.geovnn.meteoapuane.presentation.provincia.ProvinciaScreen
 import com.geovnn.meteoapuane.presentation.provincia.ProvinciaViewModel
 import com.geovnn.meteoapuane.presentation.viabilita.ViabilitaScreen
@@ -120,6 +122,7 @@ fun Navigation() {
     val viabilitaViewModel = hiltViewModel<ViabilitaViewModel>()
     val incendiViewModel = hiltViewModel<IncendiViewModel>()
     val webcamViewModel = hiltViewModel<WebcamViewModel>()
+    val nowcastingViewModel = hiltViewModel<NowcastingViewModel>()
 
 
     val homeState by homeViewModel.state.collectAsState()
@@ -129,6 +132,7 @@ fun Navigation() {
     val viabilitaState by viabilitaViewModel.state.collectAsState()
     val incendiState by incendiViewModel.state.collectAsState()
     val webcamState by webcamViewModel.state.collectAsState()
+    val nowcastingState by nowcastingViewModel.state.collectAsState()
     val navController = rememberNavController()
     val drawerItems = listOf(
         DrawerItem(
@@ -381,7 +385,10 @@ fun Navigation() {
                     )
                 }
                 composable(route = Screen.NowcastingScreen.route) {
-                    NowcastingScreen()
+                    NowcastingScreen(
+                        uiState = nowcastingState,
+                        refreshData = { nowcastingViewModel.updateData() }
+                    )
                 }
             }
         }

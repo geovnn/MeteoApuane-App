@@ -5,6 +5,7 @@ import com.geovnn.meteoapuane.domain.models.ConfiniPage
 import com.geovnn.meteoapuane.domain.models.HomePage
 import com.geovnn.meteoapuane.domain.models.IncendiPage
 import com.geovnn.meteoapuane.domain.models.MontagnaPage
+import com.geovnn.meteoapuane.domain.models.NowcastingPage
 import com.geovnn.meteoapuane.domain.models.ProvinciaPage
 import com.geovnn.meteoapuane.domain.models.ViabilitaPage
 import com.geovnn.meteoapuane.domain.models.WebcamPage
@@ -26,5 +27,7 @@ interface MeteoRepository {
     fun getIncendiPage(): Flow<Resource<IncendiPage>>
 
     fun getWebcamPage(): Flow<Resource<WebcamPage>>
+
+    fun getNowcastingPage(): Flow<Resource<NowcastingPage>>
 
 }

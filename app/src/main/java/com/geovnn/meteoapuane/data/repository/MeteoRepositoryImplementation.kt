@@ -6,6 +6,7 @@ import com.geovnn.meteoapuane.domain.models.ConfiniPage
 import com.geovnn.meteoapuane.domain.models.HomePage
 import com.geovnn.meteoapuane.domain.models.IncendiPage
 import com.geovnn.meteoapuane.domain.models.MontagnaPage
+import com.geovnn.meteoapuane.domain.models.NowcastingPage
 import com.geovnn.meteoapuane.domain.models.ProvinciaPage
 import com.geovnn.meteoapuane.domain.models.ViabilitaPage
 import com.geovnn.meteoapuane.domain.models.WebcamPage
@@ -84,6 +85,16 @@ class MeteoRepositoryImplementation @Inject constructor(
         try {
             val webcamData = api.getWebcamData()
             emit(Resource.Success(data = webcamData))
+        } catch (e: Exception) {
+            emit(Resource.Error(message = e.message.toString()))
+        }
+    }
+
+    override fun getNowcastingPage(): Flow<Resource<NowcastingPage>> = flow {
+        emit(Resource.Loading())
+        try {
+            val nowcastingData = api.getNowcastingData()
+            emit(Resource.Success(data = nowcastingData))
         } catch (e: Exception) {
             emit(Resource.Error(message = e.message.toString()))
         }

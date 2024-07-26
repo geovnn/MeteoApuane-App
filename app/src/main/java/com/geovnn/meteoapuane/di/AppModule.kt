@@ -7,6 +7,7 @@ import com.geovnn.meteoapuane.domain.use_cases.GetConfiniPage
 import com.geovnn.meteoapuane.domain.use_cases.GetHomePage
 import com.geovnn.meteoapuane.domain.use_cases.GetIncendiPage
 import com.geovnn.meteoapuane.domain.use_cases.GetMontagnaPage
+import com.geovnn.meteoapuane.domain.use_cases.GetNowcastingPage
 import com.geovnn.meteoapuane.domain.use_cases.GetProvinciaPage
 import com.geovnn.meteoapuane.domain.use_cases.GetViabilitaPage
 import com.geovnn.meteoapuane.domain.use_cases.GetWebcamPage
@@ -74,5 +75,10 @@ object AppModule {
         return GetWebcamPage(repository)
     }
 
+    @Provides
+    @Singleton
+    fun provideGetNowcastingPageUseCase(repository: MeteoRepository): GetNowcastingPage {
+        return GetNowcastingPage(repository)
+    }
 }
 

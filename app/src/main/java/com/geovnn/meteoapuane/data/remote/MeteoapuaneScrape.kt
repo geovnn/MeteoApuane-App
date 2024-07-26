@@ -13,10 +13,13 @@ import com.geovnn.meteoapuane.domain.models.ProvinciaPageSuccessivi
 import com.geovnn.meteoapuane.domain.models.ViabilitaPage
 import com.geovnn.meteoapuane.domain.models.ConfiniPageTab
 import com.geovnn.meteoapuane.domain.models.IncendiPage
+import com.geovnn.meteoapuane.domain.models.NowcastingPage
 import com.geovnn.meteoapuane.domain.models.WebcamPage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.jsoup.Jsoup
 import java.io.BufferedInputStream
 import java.io.IOException
@@ -26,15 +29,15 @@ import java.net.URL
 
 class MeteoapuaneScrape {
 
+    private val client = OkHttpClient()
+
     private suspend fun getBitmapFromUrl(url: String): Bitmap? {
         println("getBitmap")
         return withContext(Dispatchers.IO) {
-            var connection: HttpURLConnection? = null
             var inputStream: InputStream? = null
             val maxRetries = 3
             var attempts = 0
 
-            // Retry loop
             while (attempts < maxRetries) {
                 try {
                     // Ensure HTTPS protocol
@@ -44,21 +47,19 @@ class MeteoapuaneScrape {
                         url
                     }
 
-                    val urlObj = URL(formattedUrl)
-                    connection = urlObj.openConnection() as HttpURLConnection
-                    connection.instanceFollowRedirects = true
-                    connection.connectTimeout = 10000
-                    connection.readTimeout = 10000
+                    val request = Request.Builder()
+                        .url(formattedUrl)
+                        .build()
 
-                    // Check response code
-                    val responseCode = connection.responseCode
-                    if (responseCode != HttpURLConnection.HTTP_OK) {
-                        println("HTTP error code: $responseCode")
-                        return@withContext null
+                    client.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) {
+                            println("HTTP error code: ${response.code}")
+                            return@withContext null
+                        }
+
+                        inputStream = response.body?.byteStream()
+                        return@withContext BitmapFactory.decodeStream(inputStream)
                     }
-
-                    inputStream = BufferedInputStream(connection.inputStream)
-                    return@withContext BitmapFactory.decodeStream(inputStream)
                 } catch (e: IOException) {
                     e.printStackTrace()
                     attempts++
@@ -67,19 +68,12 @@ class MeteoapuaneScrape {
                         return@withContext null
                     }
                 } finally {
-                    try {
-                        inputStream?.close()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
-                    connection?.disconnect()
+                    inputStream?.close()
                 }
             }
             null
         }
     }
-
-
 
     suspend fun getHomeData(): HomePage {
         return withContext(Dispatchers.IO) {
@@ -100,24 +94,24 @@ class MeteoapuaneScrape {
             val txtUltimoraBody2 = document.select("table.testo2:nth-child(14) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)").first()?.text().toString().substringAfter(txtUltimoraTitle2).substringBefore(" Vedi tutte le segnalazioni")
 
             // Avviare il caricamento delle immagini in parallelo
-            val deferredImgAllerta1 = async { getBitmapFromUrl(urlImgAllerta1) }
-            val deferredImgAllerta2 = async { getBitmapFromUrl(urlImgAllerta2) }
-            val deferredImgAllerta3 = async { getBitmapFromUrl(urlImgAllerta3) }
-            val deferredImgAllerta4 = async { getBitmapFromUrl(urlImgAllerta4) }
-            val deferredImgAllerta5 = async { getBitmapFromUrl(urlImgAllerta5) }
-            val deferredImgAllerta6 = async { getBitmapFromUrl(urlImgAllerta6) }
-            val deferredImgUltimora1 = async { getBitmapFromUrl(urlImgUltimora1) }
-            val deferredImgUltimora2 = async { getBitmapFromUrl(urlImgUltimora2) }
+            val imgAllerta2 = withContext(Dispatchers.IO) { getBitmapFromUrl(urlImgAllerta2) }
+            val imgAllerta1 = withContext(Dispatchers.IO) { getBitmapFromUrl(urlImgAllerta1) }
+            val imgAllerta3 = withContext(Dispatchers.IO) { getBitmapFromUrl(urlImgAllerta3) }
+            val imgAllerta4 = withContext(Dispatchers.IO) { getBitmapFromUrl(urlImgAllerta4) }
+            val imgAllerta5 = withContext(Dispatchers.IO) { getBitmapFromUrl(urlImgAllerta5) }
+            val imgAllerta6 = withContext(Dispatchers.IO) { getBitmapFromUrl(urlImgAllerta6) }
+            val imgUltimora1 = withContext(Dispatchers.IO) { getBitmapFromUrl(urlImgUltimora1) }
+            val imgUltimora2 = withContext(Dispatchers.IO) { getBitmapFromUrl(urlImgUltimora2) }
 
-            // Attendere il completamento di tutti i caricamenti
-            val imgAllerta1 = deferredImgAllerta1.await()
-            val imgAllerta2 = deferredImgAllerta2.await()
-            val imgAllerta3 = deferredImgAllerta3.await()
-            val imgAllerta4 = deferredImgAllerta4.await()
-            val imgAllerta5 = deferredImgAllerta5.await()
-            val imgAllerta6 = deferredImgAllerta6.await()
-            val imgUltimora1 = deferredImgUltimora1.await()
-            val imgUltimora2 = deferredImgUltimora2.await()
+//            // Attendere il completamento di tutti i caricamenti
+//            val imgAllerta1 = deferredImgAllerta1.await()
+//            val imgAllerta2 = deferredImgAllerta2.await()
+//            val imgAllerta3 = deferredImgAllerta3.await()
+//            val imgAllerta4 = deferredImgAllerta4.await()
+//            val imgAllerta5 = deferredImgAllerta5.await()
+//            val imgAllerta6 = deferredImgAllerta6.await()
+//            val imgUltimora1 = deferredImgUltimora1.await()
+//            val imgUltimora2 = deferredImgUltimora2.await()
 
             HomePage(
                 imgAllerta1 = imgAllerta1,
@@ -143,9 +137,9 @@ class MeteoapuaneScrape {
             val url = "https://www.meteoapuane.it/previsioni.php"
             val document = Jsoup.connect(url).timeout(10 * 1000).get()
             val ultimaModifica = document.select(".aggiornamento")[0].text()
-            val deferredSfondo = async { getBitmapFromUrl("https://www.meteoapuane.it/img/apuane_previ.jpg") }
+            val sfondo = withContext(Dispatchers.IO) { getBitmapFromUrl("https://www.meteoapuane.it/img/apuane_previ.jpg") }
             // OGGI
-            val deferredTemperatureMattinaOggi = async {
+            val temperatureMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -153,7 +147,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredIconaAggiunitivaMattinaOggi = async {
+            val iconaAggiunitivaMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -161,7 +155,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredAltaLunigianaMattinaOggi = async {
+            val altaLunigianaMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -169,7 +163,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredVersanteEmilianoMattinaOggi = async {
+            val versanteEmilianoMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -177,7 +171,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredMediaAltaLunigianaMattinaOggi = async {
+            val mediaAltaLunigianaMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -185,7 +179,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredLunigianaOccidentaleMattinaOggi = async {
+            val lunigianaOccidentaleMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -193,7 +187,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredAppenninoVersanteToscanoMattinaOggi = async {
+            val appenninoVersanteToscanoMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -201,7 +195,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredBassaLunigianaMattinaOggi = async {
+            val bassaLunigianaMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -209,7 +203,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredLunigianaSudOrientaleMattinaOggi = async {
+            val lunigianaSudOrientaleMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -217,7 +211,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredGolfoDeiPoetiMattinaOggi = async {
+            val golfoDeiPoetiMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -225,7 +219,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredBassaValDiMagraMattinaOggi = async {
+            val bassaValDiMagraMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -233,7 +227,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredAlpiApuaneMattinaOggi = async {
+            val alpiApuaneMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -241,7 +235,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredMassaCarraraMattinaOggi = async {
+            val massaCarraraMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -249,7 +243,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredAltaVersiliaMattinaOggi = async {
+            val altaVersiliaMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -257,7 +251,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredVentoAppenninoMattinaOggi = async {
+            val ventoAppenninoMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -265,7 +259,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredVentoLunigianaMattinaOggi = async {
+            val ventoLunigianaMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -273,7 +267,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredVentoAlpiApuaneMattinaOggi = async {
+            val ventoAlpiApuaneMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -281,7 +275,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredVentoCostaMattinaOggi = async {
+            val ventoCostaMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -289,7 +283,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredMareSottocostaMattinaOggi = async {
+            val mareSottocostaMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -297,7 +291,7 @@ class MeteoapuaneScrape {
                     )[0].select("img").attr("src")
                 )
             }
-            val deferredMareLargoMattinaOggi = async {
+            val mareLargoMattinaOggi = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -306,27 +300,27 @@ class MeteoapuaneScrape {
                 )
             }
 
-            val sfondo = deferredSfondo.await()
-            val temperatureMattinaOggi = deferredTemperatureMattinaOggi.await()
-            val iconaAggiunitivaMattinaOggi = deferredIconaAggiunitivaMattinaOggi.await()
-            val altaLunigianaMattinaOggi = deferredAltaLunigianaMattinaOggi.await()
-            val versanteEmilianoMattinaOggi = deferredVersanteEmilianoMattinaOggi.await()
-            val mediaAltaLunigianaMattinaOggi = deferredMediaAltaLunigianaMattinaOggi.await()
-            val lunigianaOccidentaleMattinaOggi = deferredLunigianaOccidentaleMattinaOggi.await()
-            val appenninoVersanteToscanoMattinaOggi = deferredAppenninoVersanteToscanoMattinaOggi.await()
-            val bassaLunigianaMattinaOggi = deferredBassaLunigianaMattinaOggi.await()
-            val lunigianaSudOrientaleMattinaOggi = deferredLunigianaSudOrientaleMattinaOggi.await()
-            val golfoDeiPoetiMattinaOggi = deferredGolfoDeiPoetiMattinaOggi.await()
-            val bassaValDiMagraMattinaOggi = deferredBassaValDiMagraMattinaOggi.await()
-            val alpiApuaneMattinaOggi = deferredAlpiApuaneMattinaOggi.await()
-            val massaCarraraMattinaOggi = deferredMassaCarraraMattinaOggi.await()
-            val altaVersiliaMattinaOggi = deferredAltaVersiliaMattinaOggi.await()
-            val ventoAppenninoMattinaOggi = deferredVentoAppenninoMattinaOggi.await()
-            val ventoLunigianaMattinaOggi = deferredVentoLunigianaMattinaOggi.await()
-            val ventoAlpiApuaneMattinaOggi = deferredVentoAlpiApuaneMattinaOggi.await()
-            val ventoCostaMattinaOggi = deferredVentoCostaMattinaOggi.await()
-            val mareSottocostaMattinaOggi = deferredMareSottocostaMattinaOggi.await()
-            val mareLargoMattinaOggi = deferredMareLargoMattinaOggi.await()
+//            val sfondo = deferredSfondo.await()
+//            val temperatureMattinaOggi = deferredTemperatureMattinaOggi.await()
+//            val iconaAggiunitivaMattinaOggi = deferredIconaAggiunitivaMattinaOggi.await()
+//            val altaLunigianaMattinaOggi = deferredAltaLunigianaMattinaOggi.await()
+//            val versanteEmilianoMattinaOggi = deferredVersanteEmilianoMattinaOggi.await()
+//            val mediaAltaLunigianaMattinaOggi = deferredMediaAltaLunigianaMattinaOggi.await()
+//            val lunigianaOccidentaleMattinaOggi = deferredLunigianaOccidentaleMattinaOggi.await()
+//            val appenninoVersanteToscanoMattinaOggi = deferredAppenninoVersanteToscanoMattinaOggi.await()
+//            val bassaLunigianaMattinaOggi = deferredBassaLunigianaMattinaOggi.await()
+//            val lunigianaSudOrientaleMattinaOggi = deferredLunigianaSudOrientaleMattinaOggi.await()
+//            val golfoDeiPoetiMattinaOggi = deferredGolfoDeiPoetiMattinaOggi.await()
+//            val bassaValDiMagraMattinaOggi = deferredBassaValDiMagraMattinaOggi.await()
+//            val alpiApuaneMattinaOggi = deferredAlpiApuaneMattinaOggi.await()
+//            val massaCarraraMattinaOggi = deferredMassaCarraraMattinaOggi.await()
+//            val altaVersiliaMattinaOggi = deferredAltaVersiliaMattinaOggi.await()
+//            val ventoAppenninoMattinaOggi = deferredVentoAppenninoMattinaOggi.await()
+//            val ventoLunigianaMattinaOggi = deferredVentoLunigianaMattinaOggi.await()
+//            val ventoAlpiApuaneMattinaOggi = deferredVentoAlpiApuaneMattinaOggi.await()
+//            val ventoCostaMattinaOggi = deferredVentoCostaMattinaOggi.await()
+//            val mareSottocostaMattinaOggi = deferredMareSottocostaMattinaOggi.await()
+//            val mareLargoMattinaOggi = deferredMareLargoMattinaOggi.await()
 
             val mappaMattinaOggi = ProvinciaPageMap(
                 sfondo,
@@ -351,126 +345,126 @@ class MeteoapuaneScrape {
                 mareSottocostaMattinaOggi,
                 mareLargoMattinaOggi
             )
-            val temperatureSeraOggi = getBitmapFromUrl(
+            val temperatureSeraOggi = withContext(Dispatchers.IO) {getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "temperature"
                 )[1].select("img").attr("src")
-            )
-            val iconaAggiunitivaSeraOggi = getBitmapFromUrl(
+            )}
+            val iconaAggiunitivaSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "iconaaggiuntiva"
                 )[1].select("img").attr("src")
-            )
-            val altaLunigianaSeraOggi = getBitmapFromUrl(
+            )}
+            val altaLunigianaSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "cisa"
                 )[1].select("img").attr("src")
-            )
-            val versanteEmilianoSeraOggi = getBitmapFromUrl(
+            )}
+            val versanteEmilianoSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "parma"
                 )[1].select("img").attr("src")
-            )
-            val mediaAltaLunigianaSeraOggi = getBitmapFromUrl(
+            )}
+            val mediaAltaLunigianaSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "pontremoli"
                 )[1].select("img").attr("src")
-            )
-            val lunigianaOccidentaleSeraOggi = getBitmapFromUrl(
+            )}
+            val lunigianaOccidentaleSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "zeri"
                 )[1].select("img").attr("src")
-            )
-            val appenninoVersanteToscanoSeraOggi = getBitmapFromUrl(
+            )}
+            val appenninoVersanteToscanoSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "cerreto"
                 )[1].select("img").attr("src")
-            )
-            val bassaLunigianaSeraOggi = getBitmapFromUrl(
+            )}
+            val bassaLunigianaSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aulla"
                 )[1].select("img").attr("src")
-            )
-            val lunigianaSudOrientaleSeraOggi = getBitmapFromUrl(
+            )}
+            val lunigianaSudOrientaleSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "fivizzano"
                 )[1].select("img").attr("src")
-            )
-            val golfoDeiPoetiSeraOggi = getBitmapFromUrl(
+            )}
+            val golfoDeiPoetiSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aggiuntiva2"
                 )[1].select("img").attr("src")
-            )
-            val bassaValDiMagraSeraOggi = getBitmapFromUrl(
+            )}
+            val bassaValDiMagraSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "sarzana"
                 )[1].select("img").attr("src")
-            )
-            val alpiApuaneSeraOggi = getBitmapFromUrl(
+            )}
+            val alpiApuaneSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "apuane"
                 )[1].select("img").attr("src")
-            )
-            val massaCarraraSeraOggi = getBitmapFromUrl(
+            )}
+            val massaCarraraSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "massa"
                 )[1].select("img").attr("src")
-            )
-            val altaVersiliaSeraOggi = getBitmapFromUrl(
+            )}
+            val altaVersiliaSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aggiuntiva"
                 )[1].select("img").attr("src")
-            )
-            val ventoAppenninoSeraOggi = getBitmapFromUrl(
+            )}
+            val ventoAppenninoSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento2"
                 )[1].select("img").attr("src")
-            )
-            val ventoLunigianaSeraOggi = getBitmapFromUrl(
+            )}
+            val ventoLunigianaSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento1"
                 )[1].select("img").attr("src")
-            )
-            val ventoAlpiApuaneSeraOggi = getBitmapFromUrl(
+            )}
+            val ventoAlpiApuaneSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento3"
                 )[1].select("img").attr("src")
-            )
-            val ventoCostaSeraOggi = getBitmapFromUrl(
+            )}
+            val ventoCostaSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento4"
                 )[1].select("img").attr("src")
-            )
-            val mareSottocostaSeraOggi = getBitmapFromUrl(
+            )}
+            val mareSottocostaSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "mare1"
                 )[1].select("img").attr("src")
-            )
-            val mareLargoSeraOggi = getBitmapFromUrl(
+            )}
+            val mareLargoSeraOggi = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "mare2"
                 )[1].select("img").attr("src")
-            )
+            )}
             val mappaSeraOggi = ProvinciaPageMap(
                 sfondo,
                 temperatureSeraOggi,
@@ -528,126 +522,126 @@ class MeteoapuaneScrape {
                 )
             )
             //DOMANI
-            val temperatureMattinaDomani = getBitmapFromUrl(
+            val temperatureMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "temperature"
                 )[2].select("img").attr("src")
-            )
-            val iconaAggiunitivaMattinaDomani = getBitmapFromUrl(
+            )}
+            val iconaAggiunitivaMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "iconaaggiuntiva"
                 )[2].select("img").attr("src")
-            )
-            val altaLunigianaMattinaDomani = getBitmapFromUrl(
+            )}
+            val altaLunigianaMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "cisa"
                 )[2].select("img").attr("src")
-            )
-            val versanteEmilianoMattinaDomani = getBitmapFromUrl(
+            )}
+            val versanteEmilianoMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "parma"
                 )[2].select("img").attr("src")
-            )
-            val mediaAltaLunigianaMattinaDomani = getBitmapFromUrl(
+            )}
+            val mediaAltaLunigianaMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "pontremoli"
                 )[2].select("img").attr("src")
-            )
-            val lunigianaOccidentaleMattinaDomani = getBitmapFromUrl(
+            )}
+            val lunigianaOccidentaleMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "zeri"
                 )[2].select("img").attr("src")
-            )
-            val appenninoVersanteToscanoMattinaDomani = getBitmapFromUrl(
+            )}
+            val appenninoVersanteToscanoMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "cerreto"
                 )[2].select("img").attr("src")
-            )
-            val bassaLunigianaMattinaDomani = getBitmapFromUrl(
+            )}
+            val bassaLunigianaMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aulla"
                 )[2].select("img").attr("src")
-            )
-            val lunigianaSudOrientaleMattinaDomani = getBitmapFromUrl(
+            )}
+            val lunigianaSudOrientaleMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "fivizzano"
                 )[2].select("img").attr("src")
-            )
-            val golfoDeiPoetiMattinaDomani = getBitmapFromUrl(
+            )}
+            val golfoDeiPoetiMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aggiuntiva2"
                 )[2].select("img").attr("src")
-            )
-            val bassaValDiMagraMattinaDomani = getBitmapFromUrl(
+            )}
+            val bassaValDiMagraMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "sarzana"
                 )[2].select("img").attr("src")
-            )
-            val alpiApuaneMattinaDomani = getBitmapFromUrl(
+            )}
+            val alpiApuaneMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "apuane"
                 )[2].select("img").attr("src")
-            )
-            val massaCarraraMattinaDomani = getBitmapFromUrl(
+            )}
+            val massaCarraraMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "massa"
                 )[2].select("img").attr("src")
-            )
-            val altaVersiliaMattinaDomani = getBitmapFromUrl(
+            )}
+            val altaVersiliaMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aggiuntiva"
                 )[2].select("img").attr("src")
-            )
-            val ventoAppenninoMattinaDomani = getBitmapFromUrl(
+            )}
+            val ventoAppenninoMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento2"
                 )[2].select("img").attr("src")
-            )
-            val ventoLunigianaMattinaDomani = getBitmapFromUrl(
+            )}
+            val ventoLunigianaMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento1"
                 )[2].select("img").attr("src")
-            )
-            val ventoAlpiApuaneMattinaDomani = getBitmapFromUrl(
+            )}
+            val ventoAlpiApuaneMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento3"
                 )[2].select("img").attr("src")
-            )
-            val ventoCostaMattinaDomani = getBitmapFromUrl(
+            )}
+            val ventoCostaMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento4"
                 )[2].select("img").attr("src")
-            )
-            val mareSottocostaMattinaDomani = getBitmapFromUrl(
+            )}
+            val mareSottocostaMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "mare2"
                 )[2].select("img").attr("src")
-            )
-            val mareLargoMattinaDomani = getBitmapFromUrl(
+            )}
+            val mareLargoMattinaDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "mare2"
                 )[2].select("img").attr("src")
-            )
+            )}
             val mappaMattinaDomani = ProvinciaPageMap(
                 sfondo,
                 temperatureMattinaDomani,
@@ -671,126 +665,126 @@ class MeteoapuaneScrape {
                 mareSottocostaMattinaDomani,
                 mareLargoMattinaDomani
             )
-            val temperatureSeraDomani = getBitmapFromUrl(
+            val temperatureSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "temperature"
                 )[3].select("img").attr("src")
-            )
-            val iconaAggiunitivaSeraDomani = getBitmapFromUrl(
+            )}
+            val iconaAggiunitivaSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "iconaaggiuntiva"
                 )[3].select("img").attr("src")
-            )
-            val altaLunigianaSeraDomani = getBitmapFromUrl(
+            )}
+            val altaLunigianaSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "cisa"
                 )[3].select("img").attr("src")
-            )
-            val versanteEmilianoSeraDomani = getBitmapFromUrl(
+            )}
+            val versanteEmilianoSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "parma"
                 )[3].select("img").attr("src")
-            )
-            val mediaAltaLunigianaSeraDomani = getBitmapFromUrl(
+            )}
+            val mediaAltaLunigianaSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "pontremoli"
                 )[3].select("img").attr("src")
-            )
-            val lunigianaOccidentaleSeraDomani = getBitmapFromUrl(
+            )}
+            val lunigianaOccidentaleSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "zeri"
                 )[3].select("img").attr("src")
-            )
-            val appenninoVersanteToscanoSeraDomani = getBitmapFromUrl(
+            )}
+            val appenninoVersanteToscanoSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "cerreto"
                 )[3].select("img").attr("src")
-            )
-            val bassaLunigianaSeraDomani = getBitmapFromUrl(
+            )}
+            val bassaLunigianaSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aulla"
                 )[3].select("img").attr("src")
-            )
-            val lunigianaSudOrientaleSeraDomani = getBitmapFromUrl(
+            )}
+            val lunigianaSudOrientaleSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "fivizzano"
                 )[3].select("img").attr("src")
-            )
-            val golfoDeiPoetiSeraDomani = getBitmapFromUrl(
+            )}
+            val golfoDeiPoetiSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aggiuntiva2"
                 )[3].select("img").attr("src")
-            )
-            val bassaValDiMagraSeraDomani = getBitmapFromUrl(
+            )}
+            val bassaValDiMagraSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "sarzana"
                 )[3].select("img").attr("src")
-            )
-            val alpiApuaneSeraDomani = getBitmapFromUrl(
+            )}
+            val alpiApuaneSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "apuane"
                 )[3].select("img").attr("src")
-            )
-            val massaCarraraSeraDomani = getBitmapFromUrl(
+            )}
+            val massaCarraraSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "massa"
                 )[3].select("img").attr("src")
-            )
-            val altaVersiliaSeraDomani = getBitmapFromUrl(
+            )}
+            val altaVersiliaSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aggiuntiva"
                 )[3].select("img").attr("src")
-            )
-            val ventoAppenninoSeraDomani = getBitmapFromUrl(
+            )}
+            val ventoAppenninoSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento2"
                 )[3].select("img").attr("src")
-            )
-            val ventoLunigianaSeraDomani = getBitmapFromUrl(
+            )}
+            val ventoLunigianaSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento1"
                 )[3].select("img").attr("src")
-            )
-            val ventoAlpiApuaneSeraDomani = getBitmapFromUrl(
+            )}
+            val ventoAlpiApuaneSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento3"
                 )[3].select("img").attr("src")
-            )
-            val ventoCostaSeraDomani = getBitmapFromUrl(
+            )}
+            val ventoCostaSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento4"
                 )[3].select("img").attr("src")
-            )
-            val mareSottocostaSeraDomani = getBitmapFromUrl(
+            )}
+            val mareSottocostaSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "mare1"
                 )[3].select("img").attr("src")
-            )
-            val mareLargoSeraDomani = getBitmapFromUrl(
+            )}
+            val mareLargoSeraDomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "mare2"
                 )[3].select("img").attr("src")
-            )
+            )}
             val mappaSeraDomani = ProvinciaPageMap(
                 sfondo,
                 temperatureSeraDomani,
@@ -848,126 +842,126 @@ class MeteoapuaneScrape {
                 )
             )
             //DOPODOMANI
-            val temperatureMattinaDopodomani = getBitmapFromUrl(
+            val temperatureMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "temperature"
                 )[4].select("img").attr("src")
-            )
-            val iconaAggiunitivaMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val iconaAggiunitivaMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "iconaaggiuntiva"
                 )[4].select("img").attr("src")
-            )
-            val altaLunigianaMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val altaLunigianaMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "cisa"
                 )[4].select("img").attr("src")
-            )
-            val versanteEmilianoMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val versanteEmilianoMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "parma"
                 )[4].select("img").attr("src")
-            )
-            val mediaAltaLunigianaMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val mediaAltaLunigianaMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "pontremoli"
                 )[4].select("img").attr("src")
-            )
-            val lunigianaOccidentaleMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val lunigianaOccidentaleMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "zeri"
                 )[4].select("img").attr("src")
-            )
-            val appenninoVersanteToscanoMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val appenninoVersanteToscanoMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "cerreto"
                 )[4].select("img").attr("src")
-            )
-            val bassaLunigianaMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val bassaLunigianaMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aulla"
                 )[4].select("img").attr("src")
-            )
-            val lunigianaSudOrientaleMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val lunigianaSudOrientaleMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "fivizzano"
                 )[4].select("img").attr("src")
-            )
-            val golfoDeiPoetiMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val golfoDeiPoetiMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aggiuntiva2"
                 )[4].select("img").attr("src")
-            )
-            val bassaValDiMagraMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val bassaValDiMagraMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "sarzana"
                 )[4].select("img").attr("src")
-            )
-            val alpiApuaneMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val alpiApuaneMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "apuane"
                 )[4].select("img").attr("src")
-            )
-            val massaCarraraMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val massaCarraraMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "massa"
                 )[4].select("img").attr("src")
-            )
-            val altaVersiliaMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val altaVersiliaMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "aggiuntiva"
                 )[4].select("img").attr("src")
-            )
-            val ventoAppenninoMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val ventoAppenninoMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento2"
                 )[4].select("img").attr("src")
-            )
-            val ventoLunigianaMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val ventoLunigianaMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento1"
                 )[4].select("img").attr("src")
-            )
-            val ventoAlpiApuaneMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val ventoAlpiApuaneMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento3"
                 )[4].select("img").attr("src")
-            )
-            val ventoCostaMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val ventoCostaMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "vento4"
                 )[4].select("img").attr("src")
-            )
-            val mareSottocostaMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val mareSottocostaMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "mare2"
                 )[4].select("img").attr("src")
-            )
-            val mareLargoMattinaDopodomani = getBitmapFromUrl(
+            )}
+            val mareLargoMattinaDopodomani = withContext(Dispatchers.IO){getBitmapFromUrl(
                 "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                     "id",
                     "mare2"
                 )[4].select("img").attr("src")
-            )
+            )}
             val mappaMattinaDopodomani = ProvinciaPageMap(
                 sfondo,
                 temperatureMattinaDopodomani,
@@ -991,7 +985,7 @@ class MeteoapuaneScrape {
                 mareSottocostaMattinaDopodomani,
                 mareLargoMattinaDopodomani
             )
-            val deferredTemperatureSeraDopodomani = async {
+            val temperatureSeraDopodomani = withContext(Dispatchers.IO){
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -999,7 +993,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredIconaAggiunitivaSeraDopodomani = async {
+            val iconaAggiunitivaSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1007,7 +1001,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredAltaLunigianaSeraDopodomani = async {
+            val altaLunigianaSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1015,7 +1009,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredVersanteEmilianoSeraDopodomani = async {
+            val versanteEmilianoSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1023,7 +1017,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredMediaAltaLunigianaSeraDopodomani = async {
+            val mediaAltaLunigianaSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1031,7 +1025,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredLunigianaOccidentaleSeraDopodomani = async {
+            val lunigianaOccidentaleSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1039,7 +1033,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredAppenninoVersanteToscanoSeraDopodomani = async {
+            val appenninoVersanteToscanoSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1047,7 +1041,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredBassaLunigianaSeraDopodomani = async {
+            val bassaLunigianaSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1055,7 +1049,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredLunigianaSudOrientaleSeraDopodomani = async {
+            val lunigianaSudOrientaleSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1063,7 +1057,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredGolfoDeiPoetiSeraDopodomani = async {
+            val golfoDeiPoetiSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1071,7 +1065,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredBassaValDiMagraSeraDopodomani = async {
+            val bassaValDiMagraSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1079,7 +1073,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredAlpiApuaneSeraDopodomani = async {
+            val alpiApuaneSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1087,7 +1081,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredMassaCarraraSeraDopodomani = async {
+            val massaCarraraSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1095,7 +1089,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredAltaVersiliaSeraDopodomani = async {
+            val altaVersiliaSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1103,7 +1097,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredVentoAppenninoSeraDopodomani = async {
+            val ventoAppenninoSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1111,7 +1105,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredVentoLunigianaSeraDopodomani = async {
+            val ventoLunigianaSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1119,7 +1113,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredVentoAlpiApuaneSeraDopodomani = async {
+            val ventoAlpiApuaneSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1127,7 +1121,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredVentoCostaSeraDopodomani = async {
+            val ventoCostaSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1135,7 +1129,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredMareSottocostaSeraDopodomani = async {
+            val mareSottocostaSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1143,7 +1137,7 @@ class MeteoapuaneScrape {
                     )[5].select("img").attr("src")
                 )
             }
-            val deferredMareLargoSeraDopodomani = async {
+            val mareLargoSeraDopodomani = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.getElementsByAttributeValue(
                         "id",
@@ -1152,26 +1146,26 @@ class MeteoapuaneScrape {
                 )
             }
 
-            val temperatureSeraDopodomani = deferredTemperatureSeraDopodomani.await()
-            val iconaAggiunitivaSeraDopodomani = deferredIconaAggiunitivaSeraDopodomani.await()
-            val altaLunigianaSeraDopodomani = deferredAltaLunigianaSeraDopodomani.await()
-            val versanteEmilianoSeraDopodomani = deferredVersanteEmilianoSeraDopodomani.await()
-            val mediaAltaLunigianaSeraDopodomani = deferredMediaAltaLunigianaSeraDopodomani.await()
-            val lunigianaOccidentaleSeraDopodomani = deferredLunigianaOccidentaleSeraDopodomani.await()
-            val appenninoVersanteToscanoSeraDopodomani = deferredAppenninoVersanteToscanoSeraDopodomani.await()
-            val bassaLunigianaSeraDopodomani = deferredBassaLunigianaSeraDopodomani.await()
-            val lunigianaSudOrientaleSeraDopodomani = deferredLunigianaSudOrientaleSeraDopodomani.await()
-            val golfoDeiPoetiSeraDopodomani = deferredGolfoDeiPoetiSeraDopodomani.await()
-            val bassaValDiMagraSeraDopodomani = deferredBassaValDiMagraSeraDopodomani.await()
-            val alpiApuaneSeraDopodomani = deferredAlpiApuaneSeraDopodomani.await()
-            val massaCarraraSeraDopodomani = deferredMassaCarraraSeraDopodomani.await()
-            val altaVersiliaSeraDopodomani = deferredAltaVersiliaSeraDopodomani.await()
-            val ventoAppenninoSeraDopodomani = deferredVentoAppenninoSeraDopodomani.await()
-            val ventoLunigianaSeraDopodomani = deferredVentoLunigianaSeraDopodomani.await()
-            val ventoAlpiApuaneSeraDopodomani = deferredVentoAlpiApuaneSeraDopodomani.await()
-            val ventoCostaSeraDopodomani = deferredVentoCostaSeraDopodomani.await()
-            val mareSottocostaSeraDopodomani = deferredMareSottocostaSeraDopodomani.await()
-            val mareLargoSeraDopodomani = deferredMareLargoSeraDopodomani.await()
+//            val temperatureSeraDopodomani = deferredTemperatureSeraDopodomani.await()
+//            val iconaAggiunitivaSeraDopodomani = deferredIconaAggiunitivaSeraDopodomani.await()
+//            val altaLunigianaSeraDopodomani = deferredAltaLunigianaSeraDopodomani.await()
+//            val versanteEmilianoSeraDopodomani = deferredVersanteEmilianoSeraDopodomani.await()
+//            val mediaAltaLunigianaSeraDopodomani = deferredMediaAltaLunigianaSeraDopodomani.await()
+//            val lunigianaOccidentaleSeraDopodomani = deferredLunigianaOccidentaleSeraDopodomani.await()
+//            val appenninoVersanteToscanoSeraDopodomani = deferredAppenninoVersanteToscanoSeraDopodomani.await()
+//            val bassaLunigianaSeraDopodomani = deferredBassaLunigianaSeraDopodomani.await()
+//            val lunigianaSudOrientaleSeraDopodomani = deferredLunigianaSudOrientaleSeraDopodomani.await()
+//            val golfoDeiPoetiSeraDopodomani = deferredGolfoDeiPoetiSeraDopodomani.await()
+//            val bassaValDiMagraSeraDopodomani = deferredBassaValDiMagraSeraDopodomani.await()
+//            val alpiApuaneSeraDopodomani = deferredAlpiApuaneSeraDopodomani.await()
+//            val massaCarraraSeraDopodomani = deferredMassaCarraraSeraDopodomani.await()
+//            val altaVersiliaSeraDopodomani = deferredAltaVersiliaSeraDopodomani.await()
+//            val ventoAppenninoSeraDopodomani = deferredVentoAppenninoSeraDopodomani.await()
+//            val ventoLunigianaSeraDopodomani = deferredVentoLunigianaSeraDopodomani.await()
+//            val ventoAlpiApuaneSeraDopodomani = deferredVentoAlpiApuaneSeraDopodomani.await()
+//            val ventoCostaSeraDopodomani = deferredVentoCostaSeraDopodomani.await()
+//            val mareSottocostaSeraDopodomani = deferredMareSottocostaSeraDopodomani.await()
+//            val mareLargoSeraDopodomani = deferredMareLargoSeraDopodomani.await()
 
             val mappaSeraDopodomani = ProvinciaPageMap(
                 sfondo,
@@ -1249,49 +1243,49 @@ class MeteoapuaneScrape {
             val prossimiAttendibilita2 =
                 document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(6)")
                     .first()?.text().toString()
-            val deferredSuccessiviImgA1 = async {
+            val successiviImgA1 = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > img:nth-child(1)")
                         .first()?.attr("src")
                 )
             }
-            val deferredSuccessiviImgB1 = async {
+            val successiviImgB1 = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > img:nth-child(1)")
                         .first()?.attr("src")
                 )
             }
-            val deferredSuccessiviImgC1 = async {
+            val successiviImgC1 = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > img:nth-child(1)")
                         .first()?.attr("src")
                 )
             }
-            val deferredSuccessiviImgA2 = async {
+            val successiviImgA2 = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(6) > img:nth-child(1)")
                         .first()?.attr("src")
                 )
             }
-            val deferredSuccessiviImgB2 = async {
+            val successiviImgB2 = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(6) > img:nth-child(1)")
                         .first()?.attr("src")
                 )
             }
-            val deferredSuccessiviImgC2 = async {
+            val successiviImgC2 = withContext(Dispatchers.IO) {
                 getBitmapFromUrl(
                     "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(6) > img:nth-child(1)")
                         .first()?.attr("src")
                 )
             }
 
-            val successiviImgA1 = deferredSuccessiviImgA1.await()
-            val successiviImgB1 = deferredSuccessiviImgB1.await()
-            val successiviImgC1 = deferredSuccessiviImgC1.await()
-            val successiviImgA2 = deferredSuccessiviImgA2.await()
-            val successiviImgB2 = deferredSuccessiviImgB2.await()
-            val successiviImgC2 = deferredSuccessiviImgC2.await()
+//            val successiviImgA1 = deferredSuccessiviImgA1.await()
+//            val successiviImgB1 = deferredSuccessiviImgB1.await()
+//            val successiviImgC1 = deferredSuccessiviImgC1.await()
+//            val successiviImgA2 = deferredSuccessiviImgA2.await()
+//            val successiviImgB2 = deferredSuccessiviImgB2.await()
+//            val successiviImgC2 = deferredSuccessiviImgC2.await()
             val previsioniSuccessivi = ProvinciaPageSuccessivi(
                 label = "Giorni Successivi",
                 testo = prossimiTesto,
@@ -2853,6 +2847,58 @@ class MeteoapuaneScrape {
                 capanneDiCareggine = capanneDiCareggine,
                 monteArgegna = monteArgegna,
 
+            )
+        }
+    }
+
+    suspend fun getNowcastingData(): NowcastingPage {
+        return withContext(Dispatchers.IO) {
+            val document = Jsoup.connect("https://www.meteoapuane.it/nowcasting.php").timeout(10 * 1000).get()
+            val imgMeteoSatInfrarosso = document.select("td.testo2 > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+            val imgMeteosatInfrarossoAnimazione = document.select("td.testo2 > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+            val imgTemperaturaNubi = document.select("td.testo2 > table:nth-child(5) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+            val imgMeteosatVisibileAnimazione = document.select("td.testo2 > table:nth-child(5) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+            val imgFulminazioniAnimazioneGolfoLigure = document.select("td.testo2 > table:nth-child(7) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+            val imgFulminazioniAnimazioneItalia = document.select("td.testo2 > table:nth-child(7) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+            val imgRadarPrecipitazioniSettepani = "https://www.meteoapuane.it/" + document.select("td.testo2 > table:nth-child(9) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+            val imgRadarPrecipitazioniMeteoFrance = document.select("td.testo2 > table:nth-child(9) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+            val imgCartaSinotticaEuropa = document.select("td.testo2 > table:nth-child(11) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+            val imgCartaSinotticaItalia = document.select("td.testo2 > table:nth-child(11) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)").attr("src")
+
+            val deferredImgMeteoSatInfrarosso = async { getBitmapFromUrl(imgMeteoSatInfrarosso) }
+            val deferredImgMeteosatInfrarossoAnimazione = async { getBitmapFromUrl(imgMeteosatInfrarossoAnimazione) }
+            val deferredImgTemperaturaNubi = async { getBitmapFromUrl(imgTemperaturaNubi) }
+            val deferredImgMeteosatVisibileAnimazione = async { getBitmapFromUrl(imgMeteosatVisibileAnimazione) }
+            val deferredImgFulminazioniAnimazioneGolfoLigure = async { getBitmapFromUrl(imgFulminazioniAnimazioneGolfoLigure) }
+            val deferredImgFulminazioniAnimazioneItalia = async { getBitmapFromUrl(imgFulminazioniAnimazioneItalia) }
+            val deferredImgRadarPrecipitazioniSettepani = async { getBitmapFromUrl(imgRadarPrecipitazioniSettepani) }
+            val deferredImgRadarPrecipitazioniMeteoFrance = async { getBitmapFromUrl(imgRadarPrecipitazioniMeteoFrance) }
+            val deferredImgCartaSinotticaEuropa = async { getBitmapFromUrl(imgCartaSinotticaEuropa) }
+            val deferredImgCartaSinotticaItalia = async { getBitmapFromUrl(imgCartaSinotticaItalia) }
+
+            val meteosatInfrarosso = deferredImgMeteoSatInfrarosso.await()
+            val meteosatInfrarossoAnimazione = deferredImgMeteosatInfrarossoAnimazione.await()
+            val temperaturaNubi  = deferredImgTemperaturaNubi.await()
+            val meteosatVisibileAnimazione = deferredImgMeteosatVisibileAnimazione.await()
+            val fulminazioniAnimazioneGolfoLigure = deferredImgFulminazioniAnimazioneGolfoLigure.await()
+            val fulminazioniAnimazioneItalia = deferredImgFulminazioniAnimazioneItalia.await()
+            val radarPrecipitazioniSettepani = deferredImgRadarPrecipitazioniSettepani.await()
+            val radarPrecipitazioniMeteoFrance = deferredImgRadarPrecipitazioniMeteoFrance.await()
+            val cartaSinotticaEuropa = deferredImgCartaSinotticaEuropa.await()
+            val cartaSinotticaItalia = deferredImgCartaSinotticaItalia.await()
+
+
+            NowcastingPage(
+                meteosatInfrarosso = meteosatInfrarosso,
+                meteosatInfrarossoAnimazione = meteosatInfrarossoAnimazione,
+                temperaturaNubi = temperaturaNubi,
+                meteosatVisibileAnimazione = meteosatVisibileAnimazione,
+                fulminazioniAnimazioneGolfoLigure = fulminazioniAnimazioneGolfoLigure,
+                fulminazioniAnimazioneItalia = fulminazioniAnimazioneItalia,
+                radarPrecipitazioniSettepani = radarPrecipitazioniSettepani,
+                radarPrecipitazioniMeteoFrance = radarPrecipitazioniMeteoFrance,
+                cartaSinotticaEuropa = cartaSinotticaEuropa,
+                cartaSinotticaItalia = cartaSinotticaItalia
             )
         }
     }
