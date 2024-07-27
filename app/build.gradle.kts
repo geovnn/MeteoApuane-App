@@ -92,6 +92,9 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.dash)
     implementation(libs.androidx.media3.ui)
 
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
 }
 
 kapt {

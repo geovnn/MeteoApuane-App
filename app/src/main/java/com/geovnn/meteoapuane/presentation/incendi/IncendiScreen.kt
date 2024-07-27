@@ -52,6 +52,7 @@ import com.geovnn.meteoapuane.presentation.home.composables.AllertaCard
 import com.geovnn.meteoapuane.presentation.utils.FontSizeRange
 import com.geovnn.meteoapuane.presentation.utils.composables.AutoResizeText
 import com.geovnn.meteoapuane.presentation.utils.composables.BodyText
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -193,23 +194,23 @@ fun IncendiScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Box(modifier = Modifier.weight(1f)) {
-                                uiState.incendiPage.costaOggi?.let { Image(
+                                ImageCoil(
                                     modifier = Modifier.fillMaxSize(),
-                                    bitmap = it.asImageBitmap(),
-                                    contentDescription = null,
+                                    url = uiState.incendiPage.costaOggi,
+                                    contentDescription = "",
                                     contentScale = ContentScale.FillWidth
-                                ) }
-
+                                )
                             }
+
                             VerticalDivider(color = MaterialTheme.colorScheme.onPrimaryContainer)
 
                             Box(modifier = Modifier.weight(1f)) {
-                                uiState.incendiPage.lunigianaOggi?.let { Image(
+                                ImageCoil(
                                     modifier = Modifier.fillMaxSize(),
-                                    bitmap = it.asImageBitmap(),
-                                    contentDescription = null,
+                                    url = uiState.incendiPage.lunigianaOggi,
+                                    contentDescription = "",
                                     contentScale = ContentScale.FillWidth
-                                ) }
+                                )
                             }
                         }
                         TitleText(
@@ -224,23 +225,22 @@ fun IncendiScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Box(modifier = Modifier.weight(1f)) {
-                                uiState.incendiPage.costaDomani?.let { Image(
+                                ImageCoil(
                                     modifier = Modifier.fillMaxSize(),
-                                    bitmap = it.asImageBitmap(),
-                                    contentDescription = null,
+                                    url = uiState.incendiPage.costaDomani,
+                                    contentDescription = "",
                                     contentScale = ContentScale.FillWidth
-                                ) }
-
+                                )
                             }
                             VerticalDivider(color = MaterialTheme.colorScheme.onPrimaryContainer)
 
                             Box(modifier = Modifier.weight(1f)) {
-                                uiState.incendiPage.lunigianaDomani?.let { Image(
+                                ImageCoil(
                                     modifier = Modifier.fillMaxSize(),
-                                    bitmap = it.asImageBitmap(),
-                                    contentDescription = null,
+                                    url = uiState.incendiPage.lunigianaDomani,
+                                    contentDescription = "",
                                     contentScale = ContentScale.FillWidth
-                                ) }
+                                )
                             }
                         }
                         TitleText(
@@ -255,23 +255,22 @@ fun IncendiScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Box(modifier = Modifier.weight(1f)) {
-                                uiState.incendiPage.costaDopodomani?.let { Image(
+                                ImageCoil(
                                     modifier = Modifier.fillMaxSize(),
-                                    bitmap = it.asImageBitmap(),
-                                    contentDescription = null,
+                                    url = uiState.incendiPage.costaDopodomani,
+                                    contentDescription = "",
                                     contentScale = ContentScale.FillWidth
-                                ) }
-
+                                )
                             }
                             VerticalDivider(color = MaterialTheme.colorScheme.onPrimaryContainer)
 
                             Box(modifier = Modifier.weight(1f)) {
-                                uiState.incendiPage.lunigianaDopodomani?.let { Image(
+                                ImageCoil(
                                     modifier = Modifier.fillMaxSize(),
-                                    bitmap = it.asImageBitmap(),
-                                    contentDescription = null,
+                                    url = uiState.incendiPage.lunigianaDopodomani,
+                                    contentDescription = "",
                                     contentScale = ContentScale.FillWidth
-                                ) }
+                                )
                             }
                         }
                     }

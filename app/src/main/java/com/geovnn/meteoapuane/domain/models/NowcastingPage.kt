@@ -3,14 +3,14 @@ package com.geovnn.meteoapuane.domain.models
 import android.graphics.Bitmap
 
 data class NowcastingPage(
-    val meteosatInfrarosso: Bitmap? = null,
-    val meteosatInfrarossoAnimazione: Bitmap? = null,
-    val temperaturaNubi: Bitmap? = null,
-    val meteosatVisibileAnimazione: Bitmap? = null,
-    val fulminazioniAnimazioneGolfoLigure: Bitmap? = null,
-    val fulminazioniAnimazioneItalia: Bitmap? = null,
-    val radarPrecipitazioniSettepani: Bitmap? = null,
-    val radarPrecipitazioniMeteoFrance: Bitmap? = null,
-    val cartaSinotticaEuropa: Bitmap? = null,
-    val cartaSinotticaItalia: Bitmap? = null,
+    val meteosatInfrarosso: String = "",
+    val meteosatInfrarossoAnimazione: String = "",
+    val temperaturaNubi: String = "",
+    val meteosatVisibileAnimazione: String = "",
+    val fulminazioniAnimazioneGolfoLigure: String = "",
+    val fulminazioniAnimazioneItalia: String = "",
+    val radarPrecipitazioniSettepani: String = "",
+    val radarPrecipitazioniMeteoFrance: String = "",
+    val cartaSinotticaEuropa: String = "",
+    val cartaSinotticaItalia: String = "",
 )

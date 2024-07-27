@@ -14,16 +14,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import com.geovnn.meteoapuane.presentation.utils.FontSizeRange
 import com.geovnn.meteoapuane.presentation.utils.composables.AutoResizeText
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 
 @Composable
 fun SegnalazioneItemRow(
     modifier : Modifier = Modifier,
     title: String = "",
-    img1 : Bitmap? = null,
-    img2 : Bitmap? = null,
-    img3 : Bitmap? = null,
-    img4 : Bitmap? = null,
-    img5 : Bitmap? = null,
+    img1 : String = "",
+    img2 : String = "",
+    img3 : String = "",
+    img4 : String = "",
+    img5 : String = "",
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -35,36 +36,36 @@ fun SegnalazioneItemRow(
             maxLines = 2
             )
         Box(modifier = Modifier.weight(1f)) {
-            if (img1!=null) {
-                Image(bitmap = img1.asImageBitmap(), contentDescription = null)
+            if (img1!="") {
+                ImageCoil(url = img1, contentDescription = "")
             } else {
                 SegnalazioneItemText(modifier = Modifier.fillMaxSize(), text = "-")
             }
         }
         Box(modifier = Modifier.weight(1f)) {
-            if (img2!=null) {
-                Image(bitmap = img2.asImageBitmap(), contentDescription = null)
+            if (img2!="") {
+                ImageCoil(url = img2, contentDescription = "")
             } else {
                 SegnalazioneItemText(modifier = Modifier.fillMaxSize(), text = "-")
             }
         }
         Box(modifier = Modifier.weight(1f)) {
-            if (img3!=null) {
-                Image(bitmap = img3.asImageBitmap(), contentDescription = null)
+            if (img3!="") {
+                ImageCoil(url = img3, contentDescription = "")
             } else {
                 SegnalazioneItemText(modifier = Modifier.fillMaxSize(), text = "-")
             }
         }
         Box(modifier = Modifier.weight(1f)) {
-            if (img4!=null) {
-                Image(bitmap = img4.asImageBitmap(), contentDescription = null)
+            if (img4!="") {
+                ImageCoil(url = img4, contentDescription = "")
             } else {
                 SegnalazioneItemText(modifier = Modifier.fillMaxSize(), text = "-")
             }
         }
         Box(modifier = Modifier.weight(1f)) {
-            if (img5!=null) {
-                Image(bitmap = img5.asImageBitmap(), contentDescription = null)
+            if (img5!="") {
+                ImageCoil(url = img5, contentDescription = "")
             } else {
                 SegnalazioneItemText(modifier = Modifier.fillMaxSize(), text = "-")
             }

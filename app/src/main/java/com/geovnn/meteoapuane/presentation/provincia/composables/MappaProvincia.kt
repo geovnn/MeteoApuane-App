@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 import com.geovnn.meteoapuane.domain.models.ProvinciaPageMap
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 
 @Composable
 fun MappaProvincia(
@@ -39,150 +40,112 @@ fun MappaProvincia(
         val iconSizeVenti = multiplierDp*11
 
         // Icone meteo:
-        mappa.sfondo?.let { Image(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxSize(),
-            bitmap = it.asImageBitmap(),
-            contentDescription = "sfondo mappa",
-            contentScale = ContentScale.Fit
-        ) }
-        mappa.meteoAltaLunigiana?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 32,
-                offsetY = multiplierDp * 16,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoVersanteEmiliano?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 62,
-                offsetY = multiplierDp * 24,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoMediaAltaLunigiana?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 38,
-                offsetY = multiplierDp * 32,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoLunigianaOccidentale?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 21,
-                offsetY = multiplierDp * 38,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoAppenninoVersanteToscano?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 76,
-                offsetY = multiplierDp * 40,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoBassaLunigiana?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 47,
-                offsetY = multiplierDp * 48,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoLunigianaSudOrientale?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 66,
-                offsetY = multiplierDp * 57,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoGolfoDeiPoeti?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 25,
-                offsetY = multiplierDp * 64,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoBassaValDiMagra?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 44,
-                offsetY = multiplierDp * 70,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoAlpiApuane?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 84,
-                offsetY = multiplierDp * 68,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoMassaCarrara?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 67,
-                offsetY = multiplierDp * 78,
-                size = iconSizeMeteo)
-        }
-        mappa.meteoAltaVersilia?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 86,
-                offsetY = multiplierDp * 85,
-                size = iconSizeMeteo)
-        }
+        ImageCoil(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxSize(),
+                url = mappa.sfondo,
+                contentDescription = "sfondo mappa",
+                contentScale = ContentScale.Fit
+            )
+        MapIcon(
+            image = mappa.meteoAltaLunigiana,
+            offsetX = multiplierDp * 32,
+            offsetY = multiplierDp * 16,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoVersanteEmiliano,
+            offsetX = multiplierDp * 62,
+            offsetY = multiplierDp * 24,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoMediaAltaLunigiana,
+            offsetX = multiplierDp * 38,
+            offsetY = multiplierDp * 32,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoLunigianaOccidentale,
+            offsetX = multiplierDp * 21,
+            offsetY = multiplierDp * 38,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoAppenninoVersanteToscano,
+            offsetX = multiplierDp * 76,
+            offsetY = multiplierDp * 40,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoBassaLunigiana,
+            offsetX = multiplierDp * 47,
+            offsetY = multiplierDp * 48,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoLunigianaSudOrientale,
+            offsetX = multiplierDp * 66,
+            offsetY = multiplierDp * 57,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoGolfoDeiPoeti,
+            offsetX = multiplierDp * 25,
+            offsetY = multiplierDp * 64,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoBassaValDiMagra,
+            offsetX = multiplierDp * 44,
+            offsetY = multiplierDp * 70,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoAlpiApuane,
+            offsetX = multiplierDp * 84,
+            offsetY = multiplierDp * 68,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoMassaCarrara,
+            offsetX = multiplierDp * 67,
+            offsetY = multiplierDp * 78,
+            size = iconSizeMeteo)
+        MapIcon(
+            image = mappa.meteoAltaVersilia,
+            offsetX = multiplierDp * 86,
+            offsetY = multiplierDp * 85,
+            size = iconSizeMeteo)
         // Icone venti:
-        mappa.ventoAppennino?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 55,
-                offsetY = multiplierDp * 12,
-                size = iconSizeVenti)
-        }
-        mappa.ventoLunigiana?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 22,
-                offsetY = multiplierDp * 51,
-                size = iconSizeVenti)
-        }
-        mappa.ventoAlpiApuane?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 97,
-                offsetY = multiplierDp * 72,
-                size = iconSizeVenti)
-        }
-        mappa.ventoCosta?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 66,
-                offsetY = multiplierDp * 91,
-                size = iconSizeVenti)
-        }
+        MapIcon(
+            image = mappa.ventoAppennino,
+            offsetX = multiplierDp * 55,
+            offsetY = multiplierDp * 12,
+            size = iconSizeVenti)
+        MapIcon(
+            image = mappa.ventoLunigiana,
+            offsetX = multiplierDp * 22,
+            offsetY = multiplierDp * 51,
+            size = iconSizeVenti)
+        MapIcon(
+            image = mappa.ventoAlpiApuane,
+            offsetX = multiplierDp * 97,
+            offsetY = multiplierDp * 72,
+            size = iconSizeVenti)
+        MapIcon(
+            image = mappa.ventoCosta,
+            offsetX = multiplierDp * 66,
+            offsetY = multiplierDp * 91,
+            size = iconSizeVenti)
         // Icone mare:
-        mappa.mareSottocosta?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 54,
-                offsetY = multiplierDp * 84,
-                size = iconSizeVenti)
-        }
-        mappa.mareLargo?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 40,
-                offsetY = multiplierDp * 94,
-                size = iconSizeVenti)
-        }
+        MapIcon(
+            image = mappa.mareSottocosta,
+            offsetX = multiplierDp * 54,
+            offsetY = multiplierDp * 84,
+            size = iconSizeVenti)
+        MapIcon(
+            image = mappa.mareLargo,
+            offsetX = multiplierDp * 40,
+            offsetY = multiplierDp * 94,
+            size = iconSizeVenti)
         // Icona temperatura:
-        mappa.temperature?.let {
-            MapIcon(
-                image = it,
-                offsetX = multiplierDp * 8,
-                offsetY = multiplierDp * 57,
-                size = multiplierDp*20)
-        }
+        MapIcon(
+            image = mappa.temperature,
+            offsetX = multiplierDp * 8,
+            offsetY = multiplierDp * 57,
+            size = multiplierDp*20)
     }
 }
 

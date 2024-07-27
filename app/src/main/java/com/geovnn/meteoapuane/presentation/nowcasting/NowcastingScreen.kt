@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
 import com.geovnn.meteoapuane.presentation.webcam.WebcamState
 import com.geovnn.meteoapuane.presentation.webcam.composables.WebcamImage
@@ -90,7 +91,7 @@ fun NowcastingScreen(
                 contentColor = MaterialTheme.colorScheme.onSurface
             )
         } else {
-            var fullscreenImage by remember { mutableStateOf<Bitmap?>(null) }
+            var fullscreenImage by remember { mutableStateOf("") }
             var showFullscreenImage by remember { mutableStateOf(false) }
 
             val alpha: Float by animateFloatAsState(if (showFullscreenImage) 0f else 1f)
@@ -140,13 +141,13 @@ fun NowcastingScreen(
                 exit = scaleOut()
             ) {
                 val image = fullscreenImage
-                if (image != null) {
-                    Image(
+                if (image != "") {
+                    ImageCoil(
                         modifier = Modifier
                             .fillMaxSize()
                             .clickable { showFullscreenImage = false },
-                        bitmap = image.asImageBitmap(),
-                        contentDescription=null
+                        url = image,
+                        contentDescription=""
                     )
                 }
 

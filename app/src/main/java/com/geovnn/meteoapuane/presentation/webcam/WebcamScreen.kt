@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import com.geovnn.meteoapuane.presentation.incendi.IncendiState
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
 import com.geovnn.meteoapuane.presentation.utils.composables.VideoView
 import com.geovnn.meteoapuane.presentation.webcam.composables.WebcamImage
@@ -91,7 +92,7 @@ fun WebcamScreen(
                 contentColor = MaterialTheme.colorScheme.onSurface
             )
         } else {
-            var fullscreenImage by remember { mutableStateOf<Bitmap?>(null) }
+            var fullscreenImage by remember { mutableStateOf<String>("") }
             var showFullscreenImage by remember { mutableStateOf(false) }
 
             val alpha: Float by animateFloatAsState(if (showFullscreenImage) 0f else 1f)
@@ -585,13 +586,13 @@ fun WebcamScreen(
                 exit = scaleOut()
             ) {
                 val image = fullscreenImage
-                if (image != null) {
-                    Image(
+                if (image != "") {
+                    ImageCoil(
                         modifier = Modifier
                             .fillMaxSize()
                             .clickable { showFullscreenImage = false },
-                        bitmap = image.asImageBitmap(),
-                        contentDescription=null
+                        url = image,
+                        contentDescription=""
                     )
                 }
 

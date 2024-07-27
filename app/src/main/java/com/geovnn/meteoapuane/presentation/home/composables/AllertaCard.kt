@@ -16,10 +16,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 
 @Composable
 fun AllertaCard(
-    list: List<Bitmap?>,
+    list: List<String>,
     modifier: Modifier = Modifier
 ) {
     OutlinedCard(
@@ -32,20 +33,17 @@ fun AllertaCard(
     ) {
         Row {
             repeat(list.size) { index ->
-                if (list[index]!=null) {
-                    list[index]?.let { image ->
-                        Image(
-                            bitmap = image.asImageBitmap(),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(50.dp)
-                                .padding(2.dp)
-                                .fillMaxSize(),
-                            contentScale = ContentScale.Fit
-
-                        )
-                    }
+                if (list[index]!="") {
+                    ImageCoil(
+                        url = list[index],
+                        contentDescription = "",
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(50.dp)
+                            .padding(2.dp)
+                            .fillMaxSize(),
+                        contentScale = ContentScale.Fit
+                    )
                 } else {
                     Box(modifier = Modifier.weight(1f))
                 }

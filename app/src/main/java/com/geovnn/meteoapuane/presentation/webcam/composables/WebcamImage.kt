@@ -21,14 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.presentation.utils.FontSizeRange
 import com.geovnn.meteoapuane.presentation.utils.composables.AutoResizeText
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 
 @Composable
 fun WebcamImage(
     modifier: Modifier = Modifier,
-    image: Bitmap?,
+    image: String,
     title: String?,
     subtitle: String?,
-    onClick: (Bitmap) -> Unit
+    onClick: (String) -> Unit
 ) {
     Box(
         modifier = modifier.padding(2.dp)
@@ -41,12 +42,12 @@ fun WebcamImage(
         ) {
             if (image!=null) {
                 Column {
-                    Image(
+                    ImageCoil(
                         modifier = Modifier
                             .clickable { onClick(image) }
                             .fillMaxSize(),
-                        bitmap = image.asImageBitmap(),
-                        contentDescription = title,
+                        url = image,
+                        contentDescription = title?:"",
                         contentScale = ContentScale.FillWidth
                     )
                     if (title != null) {

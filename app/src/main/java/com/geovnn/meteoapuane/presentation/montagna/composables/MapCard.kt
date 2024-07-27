@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.presentation.utils.composables.AutoResizeText
 import com.geovnn.meteoapuane.presentation.utils.FontSizeRange
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,11 +48,11 @@ fun MapCard(
     titolo: String,
     altitudine: String,
     data1: String,
-    icona1: Bitmap,
+    icona1: String,
     data2: String,
-    icona2: Bitmap,
+    icona2: String,
     data3: String,
-    icona3: Bitmap,
+    icona3: String,
     zeroTermico: String,
     altezzaNeve: String,
 ) {
@@ -123,11 +124,11 @@ fun MapCard(
                             textAlign = TextAlign.Center,
                             maxLines = 1
                         )
-                        Image(
+                        ImageCoil(
                             modifier = Modifier
                                 .size(iconSize)
                                 .aspectRatio(1f),
-                            bitmap = icona1.asImageBitmap(), contentDescription = "")
+                            url = icona1, contentDescription = "")
                     }
                     Column(
                         modifier= Modifier.weight(1f),
@@ -145,11 +146,11 @@ fun MapCard(
                             textAlign = TextAlign.Center,
                             maxLines = 1
                         )
-                        Image(
+                        ImageCoil(
                             modifier = Modifier
                                 .size(iconSize)
                                 .aspectRatio(1f),
-                            bitmap = icona2.asImageBitmap(), contentDescription = "")
+                            url = icona2, contentDescription = "")
                     }
                     Column(
                         modifier= Modifier.weight(1f),
@@ -167,11 +168,11 @@ fun MapCard(
                             textAlign = TextAlign.Center,
                             maxLines = 1
                         )
-                        Image(
+                        ImageCoil(
                             modifier = Modifier
                                 .size(iconSize)
                                 .aspectRatio(1f),
-                            bitmap = icona3.asImageBitmap(), contentDescription = "")
+                            url = icona3, contentDescription = "")
                     }
                 }
 //                Text(

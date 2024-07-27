@@ -9,22 +9,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.Dp
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 
 @Composable
 fun MapIcon(
     modifier: Modifier = Modifier,
-    image: Bitmap,
+    image: String,
     offsetX: Dp,
     offsetY: Dp,
     size: Dp,
 ) {
 
-    Image(
+    ImageCoil(
         modifier = modifier
             .size(size)
             .aspectRatio(1f)
             .absoluteOffset(offsetX - size / 2, offsetY - size / 2),
-        bitmap = image.asImageBitmap(),
+        url = image,
         contentDescription = ""
     )
 }

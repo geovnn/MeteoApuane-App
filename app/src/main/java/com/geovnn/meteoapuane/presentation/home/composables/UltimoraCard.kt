@@ -19,10 +19,11 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 
 @Composable
 fun UltimoraCard(
-    image: Bitmap?,
+    image: String,
     title: String,
     body: String,
     modifier: Modifier = Modifier
@@ -41,9 +42,9 @@ fun UltimoraCard(
                     .height(30.dp)
                     .fillMaxWidth()
             ) {
-                if (image != null) {
-                    Image(
-                        bitmap = image.asImageBitmap(),
+                if (image != "") {
+                    ImageCoil(
+                        url = image,
                         contentDescription = "",
                         modifier = Modifier
                             .fillMaxHeight(),

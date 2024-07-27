@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.domain.models.ProvinciaPageSuccessivi
 import com.geovnn.meteoapuane.presentation.utils.composables.BodyText
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
 
 @Composable
@@ -64,15 +65,15 @@ fun PaginaSuccessivi(
                             .align(Alignment.CenterVertically),
                         text = "COSTA - FONDOVALLE LUNIGIANA:",
                     )
-                    uiState.imgA1?.let { Image(
+                    ImageCoil(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
                             .align(Alignment.CenterVertically),
-                        bitmap = it.asImageBitmap(),
+                        url = uiState.imgA1,
                         contentDescription = "",
                         contentScale = ContentScale.Fit
-                    ) }
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -86,15 +87,15 @@ fun PaginaSuccessivi(
                             .align(Alignment.CenterVertically),
                         text = "APUANE - APPENNINO:",
                     )
-                    uiState.imgB1?.let { Image(
+                    ImageCoil(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
                             .align(Alignment.CenterVertically),
-                        bitmap = it.asImageBitmap(),
+                        url = uiState.imgB1,
                         contentDescription = "",
                         contentScale = ContentScale.Fit
-                    ) }
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -108,15 +109,15 @@ fun PaginaSuccessivi(
                             .align(Alignment.CenterVertically),
                         text = "TEMPERATURE:",
                     )
-                    uiState.imgC1?.let { Image(
+                    ImageCoil(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
                             .align(Alignment.CenterVertically),
-                        bitmap = it.asImageBitmap(),
+                        url = uiState.imgC1,
                         contentDescription = "",
                         contentScale = ContentScale.Fit
-                    ) }
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -161,15 +162,15 @@ fun PaginaSuccessivi(
                             .align(Alignment.CenterVertically),
                         text = "COSTA - FONDOVALLE LUNIGIANA:",
                     )
-                    uiState.imgA2?.let { Image(
+                    ImageCoil(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
                             .align(Alignment.CenterVertically),
-                        bitmap = it.asImageBitmap(),
+                        url = uiState.imgA2,
                         contentDescription = "",
                         contentScale = ContentScale.Fit
-                    ) }
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -183,15 +184,15 @@ fun PaginaSuccessivi(
                             .align(Alignment.CenterVertically),
                         text = "APUANE - APPENNINO:",
                     )
-                    uiState.imgB2?.let { Image(
+                    ImageCoil(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
                             .align(Alignment.CenterVertically),
-                        bitmap = it.asImageBitmap(),
+                        url = uiState.imgB2,
                         contentDescription = "",
                         contentScale = ContentScale.Fit
-                    ) }
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -205,15 +206,15 @@ fun PaginaSuccessivi(
                             .align(Alignment.CenterVertically),
                         text = "TEMPERATURE:",
                     )
-                    uiState.imgC2?.let { Image(
+                    ImageCoil(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
                             .align(Alignment.CenterVertically),
-                        bitmap = it.asImageBitmap(),
+                        url = uiState.imgC2,
                         contentDescription = "",
                         contentScale = ContentScale.Fit
-                    ) }
+                    )
                 }
                 Row(
                     modifier = Modifier

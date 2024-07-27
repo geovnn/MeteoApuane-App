@@ -18,6 +18,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 import com.geovnn.meteoapuane.presentation.montagna.MontagnaUiState
+import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 
 @Composable
 fun MappaMontagna(
@@ -41,113 +42,83 @@ fun MappaMontagna(
         val multiplierSp = with(LocalDensity.current) { ((parentSize?.width ?: 0) / 100).toSp() }
         val fontSize = multiplierSp*2.8
 
-        uiState.montagnaPage.immagineSfondo?.let { Image(
+        ImageCoil(
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxSize(),
-            bitmap = it.asImageBitmap(),
+            url = uiState.montagnaPage.immagineSfondo,
             contentDescription = "sfondo mappa",
             contentScale = ContentScale.Fit
-        ) }
+        )
+        MapCard(
+            modifier = Modifier,
+            titolo = "ZUM ZERI",
+            altitudine = "1405 m",
+            data1 = uiState.montagnaPage.testoDataOggi,
+            icona1 = uiState.montagnaPage.immagineOggiZeri,
+            data2 = uiState.montagnaPage.testoDataDomani,
+            icona2 = uiState.montagnaPage.immagineDomaniZeri,
+            data3 = uiState.montagnaPage.testoDataDopodomani,
+            icona3 = uiState.montagnaPage.immagineDopodomaniZeri,
+            zeroTermico = uiState.montagnaPage.testoZeroZeri,
+            altezzaNeve = uiState.montagnaPage.testoNeveZeri,
+            offsetX = multiplierDpX * 20,
+            offsetY = multiplierDpY * 20,
+            multiplierDp = multiplierDpX,
+            multiplierSp = multiplierSp
+        )
 
-        uiState.montagnaPage.immagineOggiZeri?.let {
-            uiState.montagnaPage.immagineDomaniZeri?.let { it1 ->
-                uiState.montagnaPage.immagineDopodomaniZeri?.let { it2 ->
-                    MapCard(
-                        modifier = Modifier,
-                        titolo = "ZUM ZERI",
-                        altitudine = "1405 m",
-                        data1 = uiState.montagnaPage.testoDataOggi,
-                        icona1 = it,
-                        data2 = uiState.montagnaPage.testoDataDomani,
-                        icona2 = it1,
-                        data3 = uiState.montagnaPage.testoDataDopodomani,
-                        icona3 = it2,
-                        zeroTermico = uiState.montagnaPage.testoZeroZeri,
-                        altezzaNeve = uiState.montagnaPage.testoNeveZeri,
-                        offsetX = multiplierDpX * 20,
-                        offsetY = multiplierDpY * 20,
-                        multiplierDp = multiplierDpX,
-                        multiplierSp = multiplierSp
-                    )
-                }
-            }
-        }
+        MapCard(
+            modifier = Modifier,
+            offsetX = multiplierDpX * 82,
+            offsetY = multiplierDpY * 20,
+            titolo = "CAMPOCECINA",
+            altitudine = "1283 m",
+            data1 = uiState.montagnaPage.testoDataOggi,
+            icona1 = uiState.montagnaPage.immagineOggiCampocecina,
+            data2 = uiState.montagnaPage.testoDataDomani,
+            icona2 = uiState.montagnaPage.immagineDomaniCampocecina,
+            data3 = uiState.montagnaPage.testoDataDopodomani,
+            icona3 = uiState.montagnaPage.immagineDopodomaniCampocecina,
+            zeroTermico = uiState.montagnaPage.testoZeroCampocecina,
+            altezzaNeve = uiState.montagnaPage.testoNeveCampocecina,
+            multiplierDp = multiplierDpX,
+            multiplierSp = multiplierSp
+        )
+        MapCard(
+            modifier = Modifier,
+            offsetX = multiplierDpX * 20,
+            offsetY = multiplierDpY * 90,
+            titolo = "PRATOSPILLA",
+            altitudine = "1352 m",
+            data1 = uiState.montagnaPage.testoDataOggi,
+            icona1 = uiState.montagnaPage.immagineOggiPratospilla,
+            data2 = uiState.montagnaPage.testoDataDomani,
+            icona2 = uiState.montagnaPage.immagineDomaniPratospilla,
+            data3 = uiState.montagnaPage.testoDataDopodomani,
+            icona3 = uiState.montagnaPage.immagineDopodomaniPratospilla,
+            zeroTermico = uiState.montagnaPage.testoZeroPratospilla,
+            altezzaNeve = uiState.montagnaPage.testoNevePratospilla,
+            multiplierDp = multiplierDpX,
+            multiplierSp = multiplierSp
+        )
 
-        uiState.montagnaPage.immagineOggiCampocecina?.let {
-            uiState.montagnaPage.immagineDomaniCampocecina?.let { it1 ->
-                uiState.montagnaPage.immagineDopodomaniCampocecina?.let { it2 ->
-                    MapCard(
-                        modifier = Modifier,
-                        offsetX = multiplierDpX * 82,
-                        offsetY = multiplierDpY * 20,
-                        titolo = "CAMPOCECINA",
-                        altitudine = "1283 m",
-                        data1 = uiState.montagnaPage.testoDataOggi,
-                        icona1 = it,
-                        data2 = uiState.montagnaPage.testoDataDomani,
-                        icona2 = it1,
-                        data3 = uiState.montagnaPage.testoDataDopodomani,
-                        icona3 = it2,
-                        zeroTermico = uiState.montagnaPage.testoZeroCampocecina,
-                        altezzaNeve = uiState.montagnaPage.testoNeveCampocecina,
-                        multiplierDp = multiplierDpX,
-                        multiplierSp = multiplierSp
-                    )
-                }
-            }
-        }
-
-        uiState.montagnaPage.immagineOggiPratospilla?.let {
-            uiState.montagnaPage.immagineDomaniPratospilla?.let { it1 ->
-                uiState.montagnaPage.immagineDopodomaniPratospilla?.let { it2 ->
-                    MapCard(
-                        modifier = Modifier,
-                        offsetX = multiplierDpX * 20,
-                        offsetY = multiplierDpY * 90,
-                        titolo = "PRATOSPILLA",
-                        altitudine = "1352 m",
-                        data1 = uiState.montagnaPage.testoDataOggi,
-                        icona1 = it,
-                        data2 = uiState.montagnaPage.testoDataDomani,
-                        icona2 = it1,
-                        data3 = uiState.montagnaPage.testoDataDopodomani,
-                        icona3 = it2,
-                        zeroTermico = uiState.montagnaPage.testoZeroPratospilla,
-                        altezzaNeve = uiState.montagnaPage.testoNevePratospilla,
-                        multiplierDp = multiplierDpX,
-                        multiplierSp = multiplierSp
-                    )
-                }
-            }
-        }
-
-
-
-
-        uiState.montagnaPage.immagineOggiCerreto?.let {
-            uiState.montagnaPage.immagineDomaniCerreto?.let { it1 ->
-                uiState.montagnaPage.immagineDopodomaniCerreto?.let { it2 ->
-                    MapCard(
-                        modifier = Modifier,
-                        offsetX = multiplierDpX * 82,
-                        offsetY = multiplierDpY * 90,
-                        titolo = "CERRETO",
-                        altitudine = "1350 m",
-                        data1 = uiState.montagnaPage.testoDataOggi,
-                        icona1 = it,
-                        data2 = uiState.montagnaPage.testoDataDomani,
-                        icona2 = it1,
-                        data3 = uiState.montagnaPage.testoDataDopodomani,
-                        icona3 = it2,
-                        zeroTermico = uiState.montagnaPage.testoZeroCerreto,
-                        altezzaNeve = uiState.montagnaPage.testoNeveCerreto,
-                        multiplierDp = multiplierDpX,
-                        multiplierSp = multiplierSp
-                    )
-                }
-            }
-        }
+        MapCard(
+            modifier = Modifier,
+            offsetX = multiplierDpX * 82,
+            offsetY = multiplierDpY * 90,
+            titolo = "CERRETO",
+            altitudine = "1350 m",
+            data1 = uiState.montagnaPage.testoDataOggi,
+            icona1 = uiState.montagnaPage.immagineOggiCerreto,
+            data2 = uiState.montagnaPage.testoDataDomani,
+            icona2 = uiState.montagnaPage.immagineDomaniCerreto,
+            data3 = uiState.montagnaPage.testoDataDopodomani,
+            icona3 = uiState.montagnaPage.immagineDopodomaniCerreto,
+            zeroTermico = uiState.montagnaPage.testoZeroCerreto,
+            altezzaNeve = uiState.montagnaPage.testoNeveCerreto,
+            multiplierDp = multiplierDpX,
+            multiplierSp = multiplierSp
+        )
     }
 }
-

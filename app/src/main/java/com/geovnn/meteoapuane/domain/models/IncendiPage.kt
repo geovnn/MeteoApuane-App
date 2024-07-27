@@ -4,12 +4,12 @@ import android.graphics.Bitmap
 
 data class IncendiPage(
     val dataOggi: String = "",
-    val costaOggi: Bitmap? = null,
-    val lunigianaOggi: Bitmap? = null,
+    val costaOggi: String = "",
+    val lunigianaOggi: String = "",
     val dataDomani: String = "",
-    val costaDomani: Bitmap? = null,
-    val lunigianaDomani: Bitmap? = null,
+    val costaDomani: String = "",
+    val lunigianaDomani: String = "",
     val dataDopodomani: String = "",
-    val costaDopodomani: Bitmap? = null,
-    val lunigianaDopodomani: Bitmap? = null,
+    val costaDopodomani: String = "",
+    val lunigianaDopodomani: String = "",
 )
