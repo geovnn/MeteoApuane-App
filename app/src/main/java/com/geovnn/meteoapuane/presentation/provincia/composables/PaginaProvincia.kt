@@ -185,7 +185,7 @@ fun PaginaProvincia(
         }
         HorizontalPager(
             state = pagerState,
-            userScrollEnabled = false,
+            userScrollEnabled = true,
             beyondBoundsPageCount = 1
         ) { page ->
             Column(

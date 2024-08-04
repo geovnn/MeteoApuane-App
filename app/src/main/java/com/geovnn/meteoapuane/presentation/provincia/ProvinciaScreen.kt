@@ -133,6 +133,7 @@ fun ProvinciaScreen(
 
                 HorizontalPager(
                     modifier = Modifier.fillMaxSize(),
+                    userScrollEnabled = false,
                     state = pagerState,
                     beyondBoundsPageCount = 3
                 ) { page ->
