@@ -10,10 +10,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -79,6 +82,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -217,121 +221,201 @@ fun Navigation() {
                 )
             },
             bottomBar = {
+//
+//                NavigationBar(
+//                    modifier = Modifier
+//                ) {
+//                    drawerItems.forEachIndexed { index, item ->
+//                        NavigationBarItem(
+////                            modifier = Modifier.background(Color.Red),
+//                            selected = selectedItemIndex == index,
+//                            onClick = {
+//                                selectedItemIndex = index
+//                                scope.launch {
+//                                    navController.navigate(item.destination) {
+//                                        popUpTo(0) {
+//                                            inclusive = true
+//                                            saveState = true
+//                                        }
+//                                    }
+//                                }
+//                            },
+//                            alwaysShowLabel = true,
+//                            label = {
+//                                Text(
+//                                    text = item.title,
+//                                    modifier = Modifier,
+//                                )
+//                            },
+//                            icon = {
+//                                Icon(
+//                                    imageVector = item.selectedIcon,
+//                                    contentDescription = item.title
+//                                )
+//                            }
+//                        )
+//                    }
+//                }
 
-                NavigationBar(
-                    modifier = Modifier
-                ) {
-                    drawerItems.forEachIndexed { index, item ->
-                        NavigationBarItem(
-//                            modifier = Modifier.background(Color.Red),
-                            selected = selectedItemIndex == index,
-                            onClick = {
-                                selectedItemIndex = index
-                                scope.launch {
-                                    navController.navigate(item.destination) {
-                                        popUpTo(0) {
-                                            inclusive = true
-                                            saveState = true
-                                        }
-                                    }
-                                }
-                            },
-                            alwaysShowLabel = true,
-                            label = {
-                                Text(
-                                    text = item.title,
-                                    modifier = Modifier,
-                                )
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = item.selectedIcon,
-                                    contentDescription = item.title
-                                )
-                            }
-                        )
-                    }
-                }
-
+                val navScrollState = rememberScrollState()
 
                 BottomAppBar(
                     containerColor = MaterialTheme.colorScheme.surface,
                     contentColor = MaterialTheme.colorScheme.onSurface,
                     actions = {
-                        Row(
-                            modifier = Modifier.horizontalScroll(rememberScrollState())
-                        ){
-                            drawerItems.forEachIndexed { index, item ->
-                                Column(
-                                    modifier = Modifier
-                                        .padding(2.dp)
-                                        .clickable {
-                                            if (selectedItemIndex!=index) {
-                                                selectedItemIndex = index
-                                                scope.launch {
-                                                    navController.navigate(item.destination) {
-                                                        popUpTo(0) {
-                                                            inclusive = true
-                                                            saveState = true
-                                                        }
-                                                    }
-                                                }
-                                            }
 
-                                        },
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    IconButton(
+                        Box(
+                            modifier= Modifier
+                        ) {
+
+                            Row(
+                                modifier = Modifier.horizontalScroll(navScrollState)
+//                                    .align(Alignment.)
+                            ){
+                                drawerItems.forEachIndexed { index, item ->
+                                    Column(
                                         modifier = Modifier
+                                            .padding(2.dp)
+                                            .clickable {
+                                                if (selectedItemIndex != index) {
+                                                    selectedItemIndex = index
+                                                    scope.launch {
+                                                        navController.navigate(item.destination) {
+                                                            popUpTo(0) {
+                                                                inclusive = true
+                                                                saveState = true
+                                                            }
+                                                        }
+                                                    }
+                                                }
 
-                                            .align(Alignment.CenterHorizontally)
-                                            .background(
-                                                color = if (selectedItemIndex == index)
-                                                    MaterialTheme.colorScheme.secondaryContainer else
-                                                    Color.Transparent,
-                                                shape = MaterialTheme.shapes.large
-                                            ),
-                                        onClick = {
-                                            if (selectedItemIndex!=index) {
-                                                selectedItemIndex = index
-                                                scope.launch {
-                                                    navController.navigate(item.destination) {
-                                                        popUpTo(0) {
-                                                            inclusive = true
-                                                            saveState = true
+                                            },
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        IconButton(
+                                            modifier = Modifier
+
+                                                .align(Alignment.CenterHorizontally)
+                                                .background(
+                                                    color = if (selectedItemIndex == index)
+                                                        MaterialTheme.colorScheme.secondaryContainer else
+                                                        Color.Transparent,
+                                                    shape = MaterialTheme.shapes.large
+                                                ),
+                                            onClick = {
+                                                if (selectedItemIndex!=index) {
+                                                    selectedItemIndex = index
+                                                    scope.launch {
+                                                        navController.navigate(item.destination) {
+                                                            popUpTo(0) {
+                                                                inclusive = true
+                                                                saveState = true
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
+                                        ) {
+                                            Icon(
+                                                modifier = Modifier
+                                                    .align(Alignment.CenterHorizontally),
+                                                imageVector = if (selectedItemIndex == index)
+                                                    item.unselectedIcon else
+                                                    item.selectedIcon,
+                                                contentDescription = "Localized description",
+                                                tint = if (selectedItemIndex == index)
+                                                    MaterialTheme.colorScheme.onSecondaryContainer else
+                                                    MaterialTheme.colorScheme.onSurface,
+                                            )
                                         }
-                                    ) {
-                                        Icon(
+                                        Text(
+                                            text = item.title,
                                             modifier = Modifier
+//                                            .padding(end = 10.dp)
                                                 .align(Alignment.CenterHorizontally),
-                                            imageVector = if (selectedItemIndex == index)
-                                                item.unselectedIcon else
-                                                item.selectedIcon,
-                                            contentDescription = "Localized description",
-                                            tint = if (selectedItemIndex == index)
-                                                MaterialTheme.colorScheme.onSecondaryContainer else
-                                                MaterialTheme.colorScheme.onSurface,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            textAlign = TextAlign.Center,
+                                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                            fontWeight = MaterialTheme.typography.labelLarge.fontWeight,
+                                            fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
+                                            fontStyle = MaterialTheme.typography.labelLarge.fontStyle
                                         )
                                     }
-                                    Text(
-                                        text = item.title,
-                                        modifier = Modifier
-//                                            .padding(end = 10.dp)
-                                            .align(Alignment.CenterHorizontally),
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        textAlign = TextAlign.Center,
-                                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                        fontWeight = MaterialTheme.typography.labelLarge.fontWeight,
-                                        fontFamily = MaterialTheme.typography.labelLarge.fontFamily,
-                                        fontStyle = MaterialTheme.typography.labelLarge.fontStyle
-                                    )
-                                }
 
+                                }
                             }
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = navScrollState.value<navScrollState.maxValue,
+                                modifier = Modifier
+                                    .fillMaxWidth(.10f)
+                                    .fillMaxHeight()
+                                    .align(Alignment.CenterEnd)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+
+                                        .background(
+                                            Brush.horizontalGradient(
+                                                colors = listOf(
+                                                    Color.Transparent,
+                                                    MaterialTheme.colorScheme.onSecondaryContainer
+                                                )
+                                            )
+                                        )
+                                )
+                            }
+//                            if (navScrollState.value<navScrollState.maxValue) {
+//                                Box(
+//                                    modifier = Modifier
+//                                        .fillMaxWidth(.15f)
+//                                        .fillMaxHeight()
+//                                        .align(Alignment.CenterEnd)
+//                                        .background(
+//                                            Brush.horizontalGradient(
+//                                                colors = listOf(
+//                                                    Color.Transparent,
+//                                                    MaterialTheme.colorScheme.secondary
+//                                                )
+//                                            )
+//                                        )
+//                                )
+//                            }
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = navScrollState.value>0,
+                                modifier = Modifier
+                                    .fillMaxWidth(.10f)
+                                    .fillMaxHeight()
+                                    .align(Alignment.CenterStart)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+
+                                        .background(
+                                            Brush.horizontalGradient(
+                                                colors = listOf(
+                                                    MaterialTheme.colorScheme.onSecondaryContainer,
+                                                    Color.Transparent
+                                                )
+                                            )
+                                        )
+                                )
+                            }
+//                            if (navScrollState.value>0) {
+//                                Box(
+//                                    modifier = Modifier
+//                                        .fillMaxWidth(.15f)
+//                                        .fillMaxHeight()
+//                                        .align(Alignment.CenterStart)
+//                                        .background(
+//                                            Brush.horizontalGradient(
+//                                                colors = listOf(
+//                                                    MaterialTheme.colorScheme.secondary,
+//                                                    Color.Transparent
+//                                                )
+//                                            )
+//                                        )
+//                                )
+//                            }
                         }
 
                     },
