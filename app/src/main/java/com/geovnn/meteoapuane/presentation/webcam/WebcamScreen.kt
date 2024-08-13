@@ -1,6 +1,8 @@
 package com.geovnn.meteoapuane.presentation.webcam
 
+import android.app.Activity
 import android.graphics.Bitmap
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.scaleIn
@@ -38,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.geovnn.meteoapuane.presentation.incendi.IncendiState
 import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
@@ -61,6 +64,9 @@ fun WebcamScreen(
         delay(1000)
         isRefreshing = false
     }
+    val activity = (LocalContext.current as? Activity)
+
+
     LaunchedEffect(Unit) {
         refreshData()
     }
@@ -96,7 +102,13 @@ fun WebcamScreen(
             var showFullscreenImage by remember { mutableStateOf(false) }
 
             val alpha: Float by animateFloatAsState(if (showFullscreenImage) 0f else 1f)
-
+            BackHandler {
+                if (showFullscreenImage) {
+                    showFullscreenImage=false
+                } else {
+                    activity?.finish()
+                }
+            }
             Column(
                 modifier = Modifier
                     .alpha(alpha)
@@ -111,7 +123,9 @@ fun WebcamScreen(
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 ) {
-                    TitleText(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp), text = "PROVINCIA DI MASSA CARRARA")
+                    TitleText(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 5.dp), text = "PROVINCIA DI MASSA CARRARA")
                     WebcamImage(
                         modifier = Modifier.fillMaxWidth(),
                         image = uiState.webcamPage.massaCentro,
@@ -275,7 +289,9 @@ fun WebcamScreen(
                     )
                 ) {
                     TitleText(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
                         text = "APPENNINO REGGIANO e PARMENSE"
                     )
                     Row {
@@ -425,7 +441,9 @@ fun WebcamScreen(
                     )
                 ) {
                     TitleText(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
                         text = "PROVINCIA della SPEZIA"
                     )
                     Row {
@@ -506,7 +524,9 @@ fun WebcamScreen(
                     )
                 ) {
                     TitleText(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 5.dp),
                         text = "VERSILIA e GARFAGNANA"
                     )
                     Row {
@@ -585,6 +605,7 @@ fun WebcamScreen(
                 enter = scaleIn(),
                 exit = scaleOut()
             ) {
+                println(fullscreenImage)
                 val image = fullscreenImage
                 if (image != "") {
                     ImageCoil(

@@ -1,6 +1,8 @@
 package com.geovnn.meteoapuane.presentation.nowcasting
 
+import android.app.Activity
 import android.graphics.Bitmap
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.scaleIn
@@ -38,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
@@ -93,9 +96,16 @@ fun NowcastingScreen(
         } else {
             var fullscreenImage by remember { mutableStateOf("") }
             var showFullscreenImage by remember { mutableStateOf(false) }
+            val activity = (LocalContext.current as? Activity)
 
             val alpha: Float by animateFloatAsState(if (showFullscreenImage) 0f else 1f)
-
+            BackHandler {
+                if (showFullscreenImage) {
+                    showFullscreenImage=false
+                } else {
+                    activity?.finish()
+                }
+            }
             Column(
                 modifier = Modifier
                     .alpha(alpha)
