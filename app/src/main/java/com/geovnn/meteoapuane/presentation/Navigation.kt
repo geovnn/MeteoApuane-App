@@ -1,19 +1,14 @@
 package com.geovnn.meteoapuane.presentation
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,8 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
@@ -32,8 +26,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Landscape
 import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Satellite
 import androidx.compose.material.icons.filled.Traffic
 import androidx.compose.material.icons.outlined.CameraAlt
@@ -45,32 +37,15 @@ import androidx.compose.material.icons.outlined.Satellite
 import androidx.compose.material.icons.outlined.Traffic
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.BottomAppBarScrollBehavior
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.contentColorFor
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -88,12 +63,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.geovnn.meteoapuane.R
 import com.geovnn.meteoapuane.presentation.confini.ConfiniScreen
@@ -105,7 +82,6 @@ import com.geovnn.meteoapuane.presentation.incendi.IncendiViewModel
 import com.geovnn.meteoapuane.presentation.montagna.MontagnaScreen
 import com.geovnn.meteoapuane.presentation.montagna.MontagnaViewModel
 import com.geovnn.meteoapuane.presentation.nowcasting.NowcastingScreen
-import com.geovnn.meteoapuane.presentation.nowcasting.NowcastingState
 import com.geovnn.meteoapuane.presentation.nowcasting.NowcastingViewModel
 import com.geovnn.meteoapuane.presentation.provincia.ProvinciaScreen
 import com.geovnn.meteoapuane.presentation.provincia.ProvinciaViewModel
@@ -613,7 +589,19 @@ fun AboutDialog(
     closeDialog: () -> Unit
 ) {
     val context = LocalContext.current
-    val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/geovnn")) } //TODO Use global string
+    val intentGithub = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/geovnn")) }
+    val intentWebsite = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.meteoapuane.it/"))
+
+    val annotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(color = LocalContentColor.current)) {
+            append("I contenuti presenti appartengono all'associazione MeteoApuane e sono disponibili pubblicamente sul sito ")
+        }
+        pushStringAnnotation(tag = "website", annotation = "https://www.meteoapuane.it/")
+        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+            append("meteoapuane.it")
+        }
+        pop()
+    }
 
     AlertDialog(
         onDismissRequest = { closeDialog() },
@@ -645,9 +633,14 @@ fun AboutDialog(
                         .size(120.dp)
                         .wrapContentSize()
                         .clickable {
-                            context.startActivity(intent)
+                            context.startActivity(intentGithub)
                         }
                 )
+                ClickableText(text = annotatedString, style = MaterialTheme.typography.bodySmall, onClick = { offset ->
+                    annotatedString.getStringAnnotations(tag = "website", start = offset, end = offset).firstOrNull()?.let {
+                        context.startActivity(intentWebsite)
+                    }
+                })
             }
         }
     }
