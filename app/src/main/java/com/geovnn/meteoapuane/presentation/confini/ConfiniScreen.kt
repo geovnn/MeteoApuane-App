@@ -2,14 +2,19 @@ package com.geovnn.meteoapuane.presentation.confini
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TextButton
@@ -38,6 +43,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -92,41 +98,55 @@ fun ConfiniScreen(
                 text = { Text(text = uiState.error) }
             )
         } else {
-            Column {
-                val pagerState = rememberPagerState(pageCount = { 4 })
-                val tabRowItems = listOf(
-                    uiState.confiniPage.paginaOggi.data,
-                    uiState.confiniPage.paginaDomani.data,
-                    uiState.confiniPage.paginaDopodomani.data,
-                )
-                UltimoAggiornamentoText(text=uiState.confiniPage.testoUltimoAggiornamento)
-                Text(
-                    text = uiState.confiniPage.testoPrevisione,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(3.dp),
-//                        fontSize = 14.sp,
-                )
-                TabRow(selectedTabIndex = pagerState.currentPage) {
-                    tabRowItems.forEachIndexed { index, item ->//iterate over TabItem List
-                        Tab(//Create tab for each item
-                            text = { Text(text = item) },
-                            selected = pagerState.currentPage == index,//select only when current index is stored page
-                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } }//animate scroll onClick
-                        )
+            val pages = remember { listOf(
+                uiState.confiniPage.paginaOggi,
+                uiState.confiniPage.paginaDomani,
+                uiState.confiniPage.paginaDopodomani
+            )}
+            val pagerState = rememberPagerState(pageCount = { 3 })
+            LazyColumn(
+                modifier = Modifier,//.verticalScroll(rememberScrollState())
+                verticalArrangement = Arrangement.Top
+            ) {
+                item {
+                    UltimoAggiornamentoText(text=uiState.confiniPage.testoUltimoAggiornamento)
+                    Text(
+                        text = uiState.confiniPage.testoPrevisione,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(3.dp),
+                    )
+                }
+                stickyHeader {
+                    val tabRowItems = listOf(
+                        uiState.confiniPage.paginaOggi.data,
+                        uiState.confiniPage.paginaDomani.data,
+                        uiState.confiniPage.paginaDopodomani.data,
+                    )
+                    TabRow(selectedTabIndex = pagerState.currentPage) {
+                        tabRowItems.forEachIndexed { index, item ->//iterate over TabItem List
+                            Tab(//Create tab for each item
+                                text = { Text(text = item) },
+                                selected = pagerState.currentPage == index,//select only when current index is stored page
+                                onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } }//animate scroll onClick
+                            )
+                        }
                     }
                 }
+                item {
 
-                HorizontalPager(
-                    modifier = Modifier.fillMaxSize(),
-                    state = pagerState,
-                    beyondBoundsPageCount = 3
-                ) { page ->
-                    when(page) {
-                        0 -> PaginaConfini( uiState = uiState.confiniPage.paginaOggi)
-                        1 -> PaginaConfini(uiState = uiState.confiniPage.paginaDomani)
-                        2 -> PaginaConfini(uiState = uiState.confiniPage.paginaDopodomani)
+                    HorizontalPager(
+                        userScrollEnabled = false,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        state = pagerState,
+                        pageSize = PageSize.Fill
+                    ) { page ->
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            PaginaConfini(uiState = pages[page])
+                        }
                     }
+
                 }
             }
         }
