@@ -4,11 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.geovnn.meteoapuane.domain.models.NowcastingPage
-import com.geovnn.meteoapuane.domain.models.WebcamPage
 import com.geovnn.meteoapuane.domain.use_cases.GetNowcastingPage
-import com.geovnn.meteoapuane.domain.use_cases.GetWebcamPage
 import com.geovnn.meteoapuane.domain.utils.Resource
-import com.geovnn.meteoapuane.presentation.webcam.WebcamState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,10 +26,6 @@ class NowcastingViewModel @Inject constructor(
     val state: StateFlow<NowcastingState> = _state.asStateFlow()
 
     private var updateJob: Job? = null
-
-    init {
-//        updateData()
-    }
 
     fun updateData() {
         updateJob = viewModelScope.launch(Dispatchers.IO) {

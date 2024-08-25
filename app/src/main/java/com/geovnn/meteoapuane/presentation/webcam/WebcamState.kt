@@ -1,6 +1,5 @@
 package com.geovnn.meteoapuane.presentation.webcam
 
-import com.geovnn.meteoapuane.domain.models.IncendiPage
 import com.geovnn.meteoapuane.domain.models.WebcamPage
 
 data class WebcamState(

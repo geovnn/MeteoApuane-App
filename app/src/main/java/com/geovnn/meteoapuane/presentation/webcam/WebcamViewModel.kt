@@ -3,12 +3,9 @@ package com.geovnn.meteoapuane.presentation.webcam
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.geovnn.meteoapuane.domain.models.IncendiPage
 import com.geovnn.meteoapuane.domain.models.WebcamPage
-import com.geovnn.meteoapuane.domain.use_cases.GetIncendiPage
 import com.geovnn.meteoapuane.domain.use_cases.GetWebcamPage
 import com.geovnn.meteoapuane.domain.utils.Resource
-import com.geovnn.meteoapuane.presentation.incendi.IncendiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,10 +26,6 @@ class WebcamViewModel @Inject constructor(
     val state: StateFlow<WebcamState> = _state.asStateFlow()
 
     private var updateJob: Job? = null
-
-    init {
-//        updateData()
-    }
 
     fun updateData() {
         updateJob = viewModelScope.launch(Dispatchers.IO) {

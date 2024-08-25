@@ -26,10 +26,6 @@ class ProvinciaViewModel @Inject constructor(
 
     private var updateJob: Job? = null
 
-    init {
-//        updateData()
-    }
-
     fun updateData() {
         updateJob = viewModelScope.launch(Dispatchers.IO) {
             getProvinciaPage().onEach {result ->

@@ -93,17 +93,6 @@ class MeteoapuaneScrape {
             val txtUltimoraBody1 = document.select("table.testo2:nth-child(14) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)").first()?.text().toString().substringAfter(txtUltimoraTitle1).substringBefore(txtUltimoraTitle2)
             val txtUltimoraBody2 = document.select("table.testo2:nth-child(14) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)").first()?.text().toString().substringAfter(txtUltimoraTitle2).substringBefore(" Vedi tutte le segnalazioni")
 
-
-//            // Attendere il completamento di tutti i caricamenti
-//            val imgAllerta1 = deferredImgAllerta1.await()
-//            val imgAllerta2 = deferredImgAllerta2.await()
-//            val imgAllerta3 = deferredImgAllerta3.await()
-//            val imgAllerta4 = deferredImgAllerta4.await()
-//            val imgAllerta5 = deferredImgAllerta5.await()
-//            val imgAllerta6 = deferredImgAllerta6.await()
-//            val imgUltimora1 = deferredImgUltimora1.await()
-//            val imgUltimora2 = deferredImgUltimora2.await()
-
             HomePage(
                 imgAllerta1 = urlImgAllerta1,
                 imgAllerta2 = urlImgAllerta2,
@@ -210,28 +199,6 @@ class MeteoapuaneScrape {
                 "id",
                 "mare2"
             )[0].select("img").attr("src")
-
-//            val sfondo = deferredSfondo.await()
-//            val temperatureMattinaOggi = deferredTemperatureMattinaOggi.await()
-//            val iconaAggiunitivaMattinaOggi = deferredIconaAggiunitivaMattinaOggi.await()
-//            val altaLunigianaMattinaOggi = deferredAltaLunigianaMattinaOggi.await()
-//            val versanteEmilianoMattinaOggi = deferredVersanteEmilianoMattinaOggi.await()
-//            val mediaAltaLunigianaMattinaOggi = deferredMediaAltaLunigianaMattinaOggi.await()
-//            val lunigianaOccidentaleMattinaOggi = deferredLunigianaOccidentaleMattinaOggi.await()
-//            val appenninoVersanteToscanoMattinaOggi = deferredAppenninoVersanteToscanoMattinaOggi.await()
-//            val bassaLunigianaMattinaOggi = deferredBassaLunigianaMattinaOggi.await()
-//            val lunigianaSudOrientaleMattinaOggi = deferredLunigianaSudOrientaleMattinaOggi.await()
-//            val golfoDeiPoetiMattinaOggi = deferredGolfoDeiPoetiMattinaOggi.await()
-//            val bassaValDiMagraMattinaOggi = deferredBassaValDiMagraMattinaOggi.await()
-//            val alpiApuaneMattinaOggi = deferredAlpiApuaneMattinaOggi.await()
-//            val massaCarraraMattinaOggi = deferredMassaCarraraMattinaOggi.await()
-//            val altaVersiliaMattinaOggi = deferredAltaVersiliaMattinaOggi.await()
-//            val ventoAppenninoMattinaOggi = deferredVentoAppenninoMattinaOggi.await()
-//            val ventoLunigianaMattinaOggi = deferredVentoLunigianaMattinaOggi.await()
-//            val ventoAlpiApuaneMattinaOggi = deferredVentoAlpiApuaneMattinaOggi.await()
-//            val ventoCostaMattinaOggi = deferredVentoCostaMattinaOggi.await()
-//            val mareSottocostaMattinaOggi = deferredMareSottocostaMattinaOggi.await()
-//            val mareLargoMattinaOggi = deferredMareLargoMattinaOggi.await()
 
             val mappaMattinaOggi = ProvinciaPageMap(
                 sfondo,
@@ -817,27 +784,6 @@ class MeteoapuaneScrape {
                 "mare2"
             )[5].select("img").attr("src")
 
-//            val temperatureSeraDopodomani = deferredTemperatureSeraDopodomani.await()
-//            val iconaAggiunitivaSeraDopodomani = deferredIconaAggiunitivaSeraDopodomani.await()
-//            val altaLunigianaSeraDopodomani = deferredAltaLunigianaSeraDopodomani.await()
-//            val versanteEmilianoSeraDopodomani = deferredVersanteEmilianoSeraDopodomani.await()
-//            val mediaAltaLunigianaSeraDopodomani = deferredMediaAltaLunigianaSeraDopodomani.await()
-//            val lunigianaOccidentaleSeraDopodomani = deferredLunigianaOccidentaleSeraDopodomani.await()
-//            val appenninoVersanteToscanoSeraDopodomani = deferredAppenninoVersanteToscanoSeraDopodomani.await()
-//            val bassaLunigianaSeraDopodomani = deferredBassaLunigianaSeraDopodomani.await()
-//            val lunigianaSudOrientaleSeraDopodomani = deferredLunigianaSudOrientaleSeraDopodomani.await()
-//            val golfoDeiPoetiSeraDopodomani = deferredGolfoDeiPoetiSeraDopodomani.await()
-//            val bassaValDiMagraSeraDopodomani = deferredBassaValDiMagraSeraDopodomani.await()
-//            val alpiApuaneSeraDopodomani = deferredAlpiApuaneSeraDopodomani.await()
-//            val massaCarraraSeraDopodomani = deferredMassaCarraraSeraDopodomani.await()
-//            val altaVersiliaSeraDopodomani = deferredAltaVersiliaSeraDopodomani.await()
-//            val ventoAppenninoSeraDopodomani = deferredVentoAppenninoSeraDopodomani.await()
-//            val ventoLunigianaSeraDopodomani = deferredVentoLunigianaSeraDopodomani.await()
-//            val ventoAlpiApuaneSeraDopodomani = deferredVentoAlpiApuaneSeraDopodomani.await()
-//            val ventoCostaSeraDopodomani = deferredVentoCostaSeraDopodomani.await()
-//            val mareSottocostaSeraDopodomani = deferredMareSottocostaSeraDopodomani.await()
-//            val mareLargoSeraDopodomani = deferredMareLargoSeraDopodomani.await()
-
             val mappaSeraDopodomani = ProvinciaPageMap(
                 sfondo,
                 temperatureSeraDopodomani,
@@ -927,12 +873,6 @@ class MeteoapuaneScrape {
             val successiviImgC2 = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(4) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(6) > img:nth-child(1)")
                 .first()?.attr("src")
 
-//            val successiviImgA1 = deferredSuccessiviImgA1.await()
-//            val successiviImgB1 = deferredSuccessiviImgB1.await()
-//            val successiviImgC1 = deferredSuccessiviImgC1.await()
-//            val successiviImgA2 = deferredSuccessiviImgA2.await()
-//            val successiviImgB2 = deferredSuccessiviImgB2.await()
-//            val successiviImgC2 = deferredSuccessiviImgC2.await()
             val previsioniSuccessivi = ProvinciaPageSuccessivi(
                 label = "Giorni Successivi",
                 testo = prossimiTesto,

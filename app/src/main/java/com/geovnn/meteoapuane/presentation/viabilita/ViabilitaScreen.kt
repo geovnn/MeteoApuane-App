@@ -46,10 +46,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.geovnn.meteoapuane.presentation.home.composables.WebcamText
 import com.geovnn.meteoapuane.presentation.utils.FontSizeRange
 import com.geovnn.meteoapuane.presentation.utils.composables.AutoResizeText
-import com.geovnn.meteoapuane.presentation.utils.composables.BodyText
 import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
 import com.geovnn.meteoapuane.presentation.utils.composables.VideoView
 import com.geovnn.meteoapuane.presentation.viabilita.composables.SegnalazioneItemRow
@@ -57,7 +55,7 @@ import com.geovnn.meteoapuane.presentation.viabilita.composables.SegnalazioneIte
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ViabilitaScreen(
     uiState: ViabilitaUiState,
@@ -72,10 +70,6 @@ fun ViabilitaScreen(
         isRefreshing = false
     }
     val state = rememberPullRefreshState(isRefreshing, ::refresh)
-
-//    LaunchedEffect(Unit) {
-//        refreshData()
-//    }
 
     var fullscreenUri by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
@@ -143,41 +137,6 @@ fun ViabilitaScreen(
                             modifier = Modifier
                         ) {
                             Spacer(modifier = Modifier.weight(2f))
-//                            AutoResizeText(
-//                                modifier = Modifier.weight(1f),
-//                                textAlign = TextAlign.Center,
-//                                maxLines = 1,
-//                                text = "VENTO",
-//                                fontSizeRange = FontSizeRange(5.sp, 20.sp)
-//                            )
-//                            AutoResizeText(
-//                                modifier = Modifier.weight(1f),
-//                                textAlign = TextAlign.Center,
-//                                maxLines = 1,
-//                                text = "PIOGGIA",
-//                                fontSizeRange = FontSizeRange(5.sp, 20.sp)
-//                            )
-//                            AutoResizeText(
-//                                modifier = Modifier.weight(1f),
-//                                textAlign = TextAlign.Center,
-//                                maxLines = 1,
-//                                text = "NEBBIA",
-//                                fontSizeRange = FontSizeRange(5.sp, 20.sp)
-//                            )
-//                            AutoResizeText(
-//                                modifier = Modifier.weight(1f),
-//                                textAlign = TextAlign.Center,
-//                                maxLines = 1,
-//                                text = "NEVE",
-//                                fontSizeRange = FontSizeRange(5.sp, 20.sp)
-//                            )
-//                            AutoResizeText(
-//                                modifier = Modifier.weight(1f),
-//                                textAlign = TextAlign.Center,
-//                                maxLines = 1,
-//                                text = "GHIACCIO",
-//                                fontSizeRange = FontSizeRange(5.sp, 20.sp)
-//                            )
                             SegnalazioneItemText(modifier = Modifier.weight(1f), text = "VENTO")
                             SegnalazioneItemText(modifier = Modifier.weight(1f), text = "PIOGGIA")
                             SegnalazioneItemText(modifier = Modifier.weight(1f), text = "NEBBIA")
@@ -224,21 +183,7 @@ fun ViabilitaScreen(
                             img4 = uiState.viabilitaPage.imgA15PontremoliNeve,
                             img5 = uiState.viabilitaPage.imgA15PontremoliGhiaccio
                         )
-
-
-
-
-
-
-
-
-
-
-
-
-
                         HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
-
                         Row(
                             modifier = Modifier.height(100.dp)
                         ) {
@@ -249,7 +194,6 @@ fun ViabilitaScreen(
                                     text = "S. Stefano Magra - km 100+100",
                                     fontSizeRange = FontSizeRange(5.sp, 20.sp)
                                 )
-//                                WebcamText(text = "Ceparana - km 90+400")
                                 Box() {
                                     if (uiState.viabilitaPage.urlVideoA15SantoStefano!="") {
                                         VideoView(
@@ -273,7 +217,6 @@ fun ViabilitaScreen(
                                     text = "Pontremoli - km 73+600",
                                     fontSizeRange = FontSizeRange(5.sp, 20.sp)
                                 )
-//                                WebcamText(text = "Luni - km 106+800")
                                 Box() {
                                     if (uiState.viabilitaPage.urlVideoA15Pontremoli!="") {
                                         VideoView(
@@ -287,7 +230,6 @@ fun ViabilitaScreen(
                                     }
                                 }
                             }
-
                         }
                         HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
                         Row(
@@ -300,7 +242,6 @@ fun ViabilitaScreen(
                                     text = "Montelungo - km 60+600",
                                     fontSizeRange = FontSizeRange(5.sp, 20.sp)
                                 )
-//                                WebcamText(text = "Avenza - km 114+000")
                                 Box {
                                     if (uiState.viabilitaPage.urlVideoA15Montelungo != "") {
                                         VideoView(
@@ -324,11 +265,6 @@ fun ViabilitaScreen(
                             Column(
                                 modifier = Modifier
                                     .weight(1f)
-//                                .border(
-//                                    width = 1.dp,
-//                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-//                                    shape = RoundedCornerShape(10)
-//                                )
                             ) {
                                 AutoResizeText(
                                     textAlign = TextAlign.Center,
@@ -336,7 +272,6 @@ fun ViabilitaScreen(
                                     text = "Tugo - km 53+000",
                                     fontSizeRange = FontSizeRange(5.sp, 20.sp)
                                 )
-//                                WebcamText(text = "Cinquale - km 123+700")
                                 Box {
                                     if (uiState.viabilitaPage.urlVideoA15Tugo != "") {
                                         VideoView(
@@ -433,7 +368,6 @@ fun ViabilitaScreen(
                                     text = "Ceparana - km 90+400",
                                     fontSizeRange = FontSizeRange(5.sp, 20.sp)
                                 )
-//                                WebcamText(text = "Ceparana - km 90+400")
                                 Box() {
                                     if (uiState.viabilitaPage.urlVideoA12Ceparana!="") {
                                         VideoView(
@@ -457,7 +391,6 @@ fun ViabilitaScreen(
                                     text = "Luni - km 106+800",
                                     fontSizeRange = FontSizeRange(5.sp, 20.sp)
                                 )
-//                                WebcamText(text = "Luni - km 106+800")
                                 Box() {
                                     if (uiState.viabilitaPage.urlVideoA12Luni!="") {
                                         VideoView(
@@ -484,7 +417,6 @@ fun ViabilitaScreen(
                                     text = "Avenza - km 114+000",
                                     fontSizeRange = FontSizeRange(5.sp, 20.sp)
                                 )
-//                                WebcamText(text = "Avenza - km 114+000")
                                 Box{
                                     if (uiState.viabilitaPage.urlVideoA12Avenza!="") {
                                         VideoView(
@@ -501,11 +433,6 @@ fun ViabilitaScreen(
                             VerticalDivider(modifier = Modifier.padding(horizontal = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
                             Column(modifier = Modifier
                                 .weight(1f)
-//                                .border(
-//                                    width = 1.dp,
-//                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-//                                    shape = RoundedCornerShape(10)
-//                                )
                             ) {
                                 AutoResizeText(
                                     textAlign = TextAlign.Center,
@@ -513,7 +440,6 @@ fun ViabilitaScreen(
                                     text = "Cinquale - km 123+700",
                                     fontSizeRange = FontSizeRange(5.sp, 20.sp)
                                 )
-//                                WebcamText(text = "Cinquale - km 123+700")
                                 Box {
                                     if (uiState.viabilitaPage.urlVideoA12Cinquale!="") {
                                         VideoView(
@@ -527,12 +453,9 @@ fun ViabilitaScreen(
                                     }
                                 }
                             }
-
                         }
-
                     }
                 }
-
             }
             AnimatedVisibility(visible = fullscreenUri!=null,
                 enter = scaleIn(),
@@ -548,6 +471,5 @@ fun ViabilitaScreen(
 
         }
         PullRefreshIndicator(isRefreshing, state, Modifier.align(Alignment.TopCenter))
-
     }
 }

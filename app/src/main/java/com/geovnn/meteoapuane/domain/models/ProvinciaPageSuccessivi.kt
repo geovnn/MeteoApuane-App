@@ -1,7 +1,5 @@
 package com.geovnn.meteoapuane.domain.models
 
-import android.graphics.Bitmap
-
 data class ProvinciaPageSuccessivi(
     val label : String = "",
     val testo : String = "",

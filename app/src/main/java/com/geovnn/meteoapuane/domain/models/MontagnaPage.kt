@@ -1,7 +1,5 @@
 package com.geovnn.meteoapuane.domain.models
 
-import android.graphics.Bitmap
-
 data class MontagnaPage(
     val testoUltimoAggiornamento : String = "",
     val testo: String = "",

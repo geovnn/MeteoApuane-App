@@ -1,13 +1,11 @@
 package com.geovnn.meteoapuane.presentation.webcam
 
 import android.app.Activity
-import android.graphics.Bitmap
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,13 +37,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.geovnn.meteoapuane.presentation.incendi.IncendiState
 import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 import com.geovnn.meteoapuane.presentation.utils.composables.TitleText
-import com.geovnn.meteoapuane.presentation.utils.composables.VideoView
 import com.geovnn.meteoapuane.presentation.webcam.composables.WebcamImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -599,8 +594,6 @@ fun WebcamScreen(
                     }
                 }
             }
-
-
             AnimatedVisibility(visible = showFullscreenImage,
                 enter = scaleIn(),
                 exit = scaleOut()

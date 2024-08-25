@@ -11,11 +11,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.ImageLoader
 import coil.compose.AsyncImage
-import coil.decode.Decoder
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import coil.util.DebugLogger
 
 @Composable
 fun ImageCoil(
@@ -26,7 +24,6 @@ fun ImageCoil(
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
-//        .logger(DebugLogger())
         .build()
     val imageRequest = ImageRequest.Builder(context)
         .data(url)
@@ -44,15 +41,12 @@ fun ImageCoil(
         }
         .build()
     val painter: Painter = rememberVectorPainter(image = Icons.Default.ImageNotSupported)
-//    val painter: Painter = rememberVectorPainter(image = Icons.Default.ImageNotSupported)
     AsyncImage(
         modifier=modifier,
         imageLoader = imageLoader,
-//        placeholder = ,
         model = imageRequest,
         error = painter,
         contentDescription = contentDescription,
         contentScale = contentScale
     )
-
 }

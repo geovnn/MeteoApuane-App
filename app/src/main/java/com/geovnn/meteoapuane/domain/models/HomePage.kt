@@ -1,6 +1,5 @@
 package com.geovnn.meteoapuane.domain.models
 
-import android.graphics.Bitmap
 
 data class HomePage(
     val imgAllerta1: String = "",

@@ -1,7 +1,5 @@
 package com.geovnn.meteoapuane.domain.models
 
-import android.graphics.Bitmap
-
 data class NowcastingPage(
     val meteosatInfrarosso: String = "",
     val meteosatInfrarossoAnimazione: String = "",

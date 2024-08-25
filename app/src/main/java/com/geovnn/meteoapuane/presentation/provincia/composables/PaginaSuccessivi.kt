@@ -1,6 +1,5 @@
 package com.geovnn.meteoapuane.presentation.provincia.composables
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,16 +11,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.geovnn.meteoapuane.domain.models.ProvinciaPageSuccessivi
 import com.geovnn.meteoapuane.presentation.utils.composables.BodyText
 import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
@@ -61,7 +55,6 @@ fun PaginaSuccessivi(
                     BodyText(
                         modifier = Modifier
                             .weight(5f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "COSTA - FONDOVALLE LUNIGIANA:",
                     )
@@ -83,7 +76,6 @@ fun PaginaSuccessivi(
                     BodyText(
                         modifier = Modifier
                             .weight(5f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "APUANE - APPENNINO:",
                     )
@@ -105,7 +97,6 @@ fun PaginaSuccessivi(
                     BodyText(
                         modifier = Modifier
                             .weight(5f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "TEMPERATURE:",
                     )
@@ -127,14 +118,12 @@ fun PaginaSuccessivi(
                     BodyText(
                         modifier = Modifier
                             .weight(5f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "ATTENDIBILITA:",
                     )
                     BodyText(
                         modifier = Modifier
                             .weight(1f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = uiState.attendibilita1,
                     )
@@ -158,7 +147,6 @@ fun PaginaSuccessivi(
                     BodyText(
                         modifier = Modifier
                             .weight(5f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "COSTA - FONDOVALLE LUNIGIANA:",
                     )
@@ -180,7 +168,6 @@ fun PaginaSuccessivi(
                     BodyText(
                         modifier = Modifier
                             .weight(5f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "APUANE - APPENNINO:",
                     )
@@ -202,7 +189,6 @@ fun PaginaSuccessivi(
                     BodyText(
                         modifier = Modifier
                             .weight(5f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "TEMPERATURE:",
                     )
@@ -224,14 +210,12 @@ fun PaginaSuccessivi(
                     BodyText(
                         modifier = Modifier
                             .weight(5f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = "ATTENDIBILITA:",
                     )
                     BodyText(
                         modifier = Modifier
                             .weight(1f)
-//                            .fillMaxSize()
                             .align(Alignment.CenterVertically),
                         text = uiState.attendibilita2,
                     )
@@ -240,4 +224,3 @@ fun PaginaSuccessivi(
         }
     }
 }
-

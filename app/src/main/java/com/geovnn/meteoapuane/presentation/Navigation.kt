@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Cloud
@@ -94,7 +94,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navigation() {
-
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val provinciaViewModel = hiltViewModel<ProvinciaViewModel>()
     val confiniViewModel = hiltViewModel<ConfiniViewModel>()
@@ -103,7 +102,6 @@ fun Navigation() {
     val incendiViewModel = hiltViewModel<IncendiViewModel>()
     val webcamViewModel = hiltViewModel<WebcamViewModel>()
     val nowcastingViewModel = hiltViewModel<NowcastingViewModel>()
-
 
     val homeState by homeViewModel.state.collectAsState()
     val provinciaState by provinciaViewModel.state.collectAsState()
@@ -176,7 +174,6 @@ fun Navigation() {
             AboutDialog { showAboutDialog = false }
         }
         Scaffold(
-            backgroundColor = MaterialTheme.colorScheme.background,
             topBar = {
                 TopAppBar(
                     title = { Text(text = "MeteoApuane",
@@ -193,48 +190,10 @@ fun Navigation() {
                                 tint = MaterialTheme.colorScheme.onSurface
                             )                        }
                     },
-//                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
                 )
             },
             bottomBar = {
-//
-//                NavigationBar(
-//                    modifier = Modifier
-//                ) {
-//                    drawerItems.forEachIndexed { index, item ->
-//                        NavigationBarItem(
-////                            modifier = Modifier.background(Color.Red),
-//                            selected = selectedItemIndex == index,
-//                            onClick = {
-//                                selectedItemIndex = index
-//                                scope.launch {
-//                                    navController.navigate(item.destination) {
-//                                        popUpTo(0) {
-//                                            inclusive = true
-//                                            saveState = true
-//                                        }
-//                                    }
-//                                }
-//                            },
-//                            alwaysShowLabel = true,
-//                            label = {
-//                                Text(
-//                                    text = item.title,
-//                                    modifier = Modifier,
-//                                )
-//                            },
-//                            icon = {
-//                                Icon(
-//                                    imageVector = item.selectedIcon,
-//                                    contentDescription = item.title
-//                                )
-//                            }
-//                        )
-//                    }
-//                }
-
                 val navScrollState = rememberScrollState()
-
                 BottomAppBar(
                     containerColor = MaterialTheme.colorScheme.surface,
                     contentColor = MaterialTheme.colorScheme.onSurface,
@@ -246,7 +205,6 @@ fun Navigation() {
 
                             Row(
                                 modifier = Modifier.horizontalScroll(navScrollState)
-//                                    .align(Alignment.)
                             ){
                                 drawerItems.forEachIndexed { index, item ->
                                     Column(
@@ -270,7 +228,6 @@ fun Navigation() {
                                     ) {
                                         IconButton(
                                             modifier = Modifier
-
                                                 .align(Alignment.CenterHorizontally)
                                                 .background(
                                                     color = if (selectedItemIndex == index)
@@ -307,7 +264,6 @@ fun Navigation() {
                                         Text(
                                             text = item.title,
                                             modifier = Modifier
-//                                            .padding(end = 10.dp)
                                                 .align(Alignment.CenterHorizontally),
                                             color = MaterialTheme.colorScheme.onSurface,
                                             textAlign = TextAlign.Center,
@@ -340,22 +296,6 @@ fun Navigation() {
                                         )
                                 )
                             }
-//                            if (navScrollState.value<navScrollState.maxValue) {
-//                                Box(
-//                                    modifier = Modifier
-//                                        .fillMaxWidth(.15f)
-//                                        .fillMaxHeight()
-//                                        .align(Alignment.CenterEnd)
-//                                        .background(
-//                                            Brush.horizontalGradient(
-//                                                colors = listOf(
-//                                                    Color.Transparent,
-//                                                    MaterialTheme.colorScheme.secondary
-//                                                )
-//                                            )
-//                                        )
-//                                )
-//                            }
                             androidx.compose.animation.AnimatedVisibility(
                                 visible = navScrollState.value>0,
                                 modifier = Modifier
@@ -365,7 +305,6 @@ fun Navigation() {
                             ) {
                                 Box(
                                     modifier = Modifier
-
                                         .background(
                                             Brush.horizontalGradient(
                                                 colors = listOf(
@@ -376,24 +315,7 @@ fun Navigation() {
                                         )
                                 )
                             }
-//                            if (navScrollState.value>0) {
-//                                Box(
-//                                    modifier = Modifier
-//                                        .fillMaxWidth(.15f)
-//                                        .fillMaxHeight()
-//                                        .align(Alignment.CenterStart)
-//                                        .background(
-//                                            Brush.horizontalGradient(
-//                                                colors = listOf(
-//                                                    MaterialTheme.colorScheme.secondary,
-//                                                    Color.Transparent
-//                                                )
-//                                            )
-//                                        )
-//                                )
-//                            }
                         }
-
                     },
                 )
             },
@@ -452,115 +374,6 @@ fun Navigation() {
                 }
             }
         }
-//        ModalNavigationDrawer(
-//            drawerContent = {
-//                ModalDrawerSheet {
-//                    Spacer(Modifier.height(32.dp))
-//                    drawerItems.forEachIndexed { index, item ->
-//                        NavigationDrawerItem(
-//                            label = {
-//                                Text(text = item.title)
-//                            },
-//                            selected = index == selectedItemIndex,
-//                            onClick = {
-//                                selectedItemIndex = index
-//                                scope.launch {
-//                                    navController.navigate(item.destination){
-//                                        popUpTo(0){
-//                                            inclusive = true
-//                                            saveState = true
-//                                        }
-//                                    }
-//                                    drawerState.close()
-//                                }
-//                            },
-//                            icon = {
-//                                Icon(
-//                                    imageVector = if (index == selectedItemIndex) {
-//                                        item.selectedIcon
-//                                    } else item.unselectedIcon,
-//                                    contentDescription = item.title
-//                                )
-//                            },
-//                            modifier = Modifier
-//                                .padding(NavigationDrawerItemDefaults.ItemPadding)
-//                        )
-//                    }
-//                    Spacer(modifier = Modifier.weight(1.0f))
-//                    NavigationDrawerItem(
-//                        label = {
-//                            Text(text = "About")
-//                        },
-//                        selected = false,
-//                        onClick = {
-//                            scope.launch {
-//                                showAboutDialog = true
-//                                drawerState.close()
-//                            }
-//                        },
-//                        icon = {
-//                            Icon(
-//                                Icons.Filled.Info,
-//                                contentDescription = "About"
-//                            )
-//                        },
-//                        modifier = Modifier
-//                            .padding(NavigationDrawerItemDefaults.ItemPadding)
-//                    )
-//                    Spacer(Modifier.height(32.dp))
-//                }
-//            },
-//            drawerState = drawerState,
-//        ) {
-//
-//            NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
-//                composable(route = Screen.HomeScreen.route) {
-//                    HomeScreen(
-//                        uiState = homeState,
-//                        onMenuClick = { scope.launch { drawerState.open() } },
-//                        refreshData = { homeViewModel.updateData() }
-//                    )
-//                }
-//                composable(route = Screen.ProvinciaScreen.route) {
-//                    ProvinciaScreen(
-//                        uiState = provinciaState,
-//                        onMenuClick = { scope.launch { drawerState.open() } },
-//                        refreshData = { provinciaViewModel.updateData() }
-//                    )
-//                }
-//                composable(route = Screen.ConfiniScreen.route) {
-//                    ConfiniScreen(
-//                        uiState = confiniState,
-//                        onMenuClick = { scope.launch { drawerState.open() } },
-//                        refreshData = { confiniViewModel.updateData() }
-//                    )
-//                }
-//                composable(route = Screen.MontagnaScreen.route) {
-//                    MontagnaScreen(
-//                        uiState = montagnaState,
-//                        onMenuClick = { scope.launch { drawerState.open() } },
-//                        refreshData = { montagnaViewModel.updateData() }
-//                    )
-//                }
-//                composable(route = Screen.ViabilitaScreen.route) {
-//                    ViabilitaScreen(
-//                        uiState = viabilitaState,
-//                        onMenuClick = { scope.launch { drawerState.open() } },
-//                        refreshData = { viabilitaViewModel.updateData() }
-//                    )
-//                }
-//                composable(route = Screen.IncendiScreen.route) {
-//                    IncendiScreen()
-//                }
-//                composable(route = Screen.WebcamScreen.route) {
-//                    WebcamScreen()
-//                }
-//                composable(route = Screen.NowcastingScreen.route) {
-//                    NowcastingScreen()
-//                }
-//            }
-//
-//        }
     }
 }
 data class DrawerItem(

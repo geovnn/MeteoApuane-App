@@ -17,7 +17,6 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +37,7 @@ import com.geovnn.meteoapuane.presentation.utils.composables.UltimoAggiornamento
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     uiState: HomeState,
@@ -98,16 +97,6 @@ fun HomeScreen(
                     .fillMaxSize()
             ) {
                 UltimoAggiornamentoText(text = uiState.homePage.txtUltimaModifia)
-
-//                Text(
-//                    text = uiState.homePage.txtUltimaModifia,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(3.dp),
-//                    fontSize = MaterialTheme.typography.titleSmall.fontSize,
-//                    textAlign = TextAlign.Center,
-//                    color = MaterialTheme.colorScheme.onBackground
-//                )
                 ElevatedCard(
                     modifier = Modifier.padding(cardPadding),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
@@ -172,10 +161,6 @@ fun HomeScreen(
                 }
             }
         }
-                    PullRefreshIndicator(isRefreshing, state, Modifier.align(Alignment.TopCenter))
+        PullRefreshIndicator(isRefreshing, state, Modifier.align(Alignment.TopCenter))
     }
 }
-
-
-
-

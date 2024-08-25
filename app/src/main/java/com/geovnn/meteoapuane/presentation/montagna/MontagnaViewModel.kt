@@ -26,10 +26,6 @@ class MontagnaViewModel @Inject constructor(
 
     private var updateJob: Job? = null
 
-    init {
-//        updateData()
-    }
-
     fun updateData() {
         updateJob = viewModelScope.launch(Dispatchers.IO) {
             getMontagnaPage().onEach {result ->

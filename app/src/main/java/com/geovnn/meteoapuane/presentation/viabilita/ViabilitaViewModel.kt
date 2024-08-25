@@ -26,10 +26,6 @@ class ViabilitaViewModel @Inject constructor(
 
     private var updateJob: Job? = null
 
-    init {
-//        updateData()
-    }
-
     fun updateData() {
         updateJob = viewModelScope.launch(Dispatchers.IO) {
             println("QUA AVVIA DAL VIEWMODEL")
@@ -58,5 +54,4 @@ class ViabilitaViewModel @Inject constructor(
             }.launchIn(this)
         }
     }
-
 }

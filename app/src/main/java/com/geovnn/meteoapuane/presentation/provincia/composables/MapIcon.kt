@@ -1,13 +1,10 @@
 package com.geovnn.meteoapuane.presentation.provincia.composables
 
-import android.graphics.Bitmap
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.Dp
 import com.geovnn.meteoapuane.presentation.utils.composables.ImageCoil
 
@@ -19,7 +16,6 @@ fun MapIcon(
     offsetY: Dp,
     size: Dp,
 ) {
-
     ImageCoil(
         modifier = modifier
             .size(size)

@@ -6,7 +6,8 @@ import com.geovnn.meteoapuane.domain.repository.MeteoRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetConfiniPage @Inject constructor(
+class
+GetConfiniPage @Inject constructor(
     private val repository: MeteoRepository
 ) {
     operator fun invoke(): Flow<Resource<ConfiniPage>> {
