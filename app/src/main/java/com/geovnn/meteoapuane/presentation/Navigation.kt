@@ -290,7 +290,7 @@ fun Navigation() {
                                             Brush.horizontalGradient(
                                                 colors = listOf(
                                                     Color.Transparent,
-                                                    MaterialTheme.colorScheme.onSecondaryContainer
+                                                    MaterialTheme.colorScheme.secondaryContainer
                                                 )
                                             )
                                         )
@@ -308,7 +308,7 @@ fun Navigation() {
                                         .background(
                                             Brush.horizontalGradient(
                                                 colors = listOf(
-                                                    MaterialTheme.colorScheme.onSecondaryContainer,
+                                                    MaterialTheme.colorScheme.secondaryContainer,
                                                     Color.Transparent
                                                 )
                                             )

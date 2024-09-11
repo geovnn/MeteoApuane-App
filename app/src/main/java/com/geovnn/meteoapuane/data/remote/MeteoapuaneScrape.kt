@@ -1464,92 +1464,171 @@ class MeteoapuaneScrape {
             val testoSegnalazione =
                 documentPanel.select("body > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > span:nth-child(1)")
                     .text()
-            println("QUA INIZIA CARICAMENTO IMMAGINI")
 //                val imgSegnalazioneGrande = getBitmapFromUrl("https://www.meteoapuane.it/"+documentPanel.select("body > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > img:nth-child(2)").first()?.select("img")?.attr("src"))
             val imgSegnalazionePiccola1 = "https://www.meteoapuane.it/ledpanel/" + documentPanel.select("body > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > img:nth-child(1)")
                 .first()?.select("img")?.attr("src")
             val imgSegnalazionePiccola2 = "https://www.meteoapuane.it/ledpanel/" + documentPanel.select("body > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > img:nth-child(1)")
                 .first()?.select("img")?.attr("src")
-            val imgA15LaspeziaVento = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15LaspeziaPioggia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(3) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15LaspeziaNebbia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(4) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15LaspeziaNeve = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(5) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15LaspeziaGhiaccio = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(6) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15SantostefanoVento = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15SantostefanoPioggia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(3) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15SantostefanoNebbia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(4) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15SantostefanoNeve = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(5) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15SantostefanoGhiaccio = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(6) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15AullaVento = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15AullaPioggia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(3) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15AullaNebbia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(4) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15AullaNeve = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(5) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15AullaGhiaccio = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(6) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15PontremoliVento = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15PontremoliPioggia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(3) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15PontremoliNebbia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(4) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15PontremoliNeve = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(5) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA15PontremoliGhiaccio = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(6) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12VersiliaVento = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12VersiliaPioggia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(3) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12VersiliaNebbia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(4) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12VersiliaNeve = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(5) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12VersiliaGhiaccio = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(6) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12MassaVento = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12MassaPioggia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(3) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12MassaNebbia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(4) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12MassaNeve = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(5) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12MassaGhiaccio = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(6) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12CarraraVento = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12CarraraPioggia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(3) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12CarraraNebbia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(4) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12CarraraNeve = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(5) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12CarraraGhiaccio = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(6) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12SarzanaVento = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12SarzanaPioggia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(3) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12SarzanaNebbia = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(4) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12SarzanaNeve = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(5) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
-            val imgA12SarzanaGhiaccio = "https://www.meteoapuane.it/" + document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(6) > img:nth-child(1)")
-                .first()?.select("img")?.attr("src")
+            val imgA15LaspeziaVento = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15LaspeziaPioggia = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(3) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15LaspeziaNebbia = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(4) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15LaspeziaNeve = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(5) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15LaspeziaGhiaccio = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(6) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15SantostefanoVento = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15SantostefanoPioggia = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(3) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15SantostefanoNebbia = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(4) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15SantostefanoNeve = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(5) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15SantostefanoGhiaccio = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(6) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15AullaVento = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15AullaPioggia = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(3) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15AullaNebbia = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(4) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15AullaNeve = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(5) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15AullaGhiaccio = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(6) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15PontremoliVento = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15PontremoliPioggia = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(3) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15PontremoliNebbia = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(4) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15PontremoliNeve = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(5) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA15PontremoliGhiaccio = document.select("table.testo2:nth-child(5) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(6) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12VersiliaVento = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12VersiliaPioggia = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(3) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12VersiliaNebbia = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(4) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12VersiliaNeve = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(5) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12VersiliaGhiaccio = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(6) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12MassaVento = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12MassaPioggia = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(3) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12MassaNebbia = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(4) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12MassaNeve = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(5) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12MassaGhiaccio = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(6) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12CarraraVento = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(2) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12CarraraPioggia = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(3) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12CarraraNebbia = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(4) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12CarraraNeve = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(5) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12CarraraGhiaccio = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(6) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12SarzanaVento = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(2) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12SarzanaPioggia = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(3) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12SarzanaNebbia = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(4) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12SarzanaNeve = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(5) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
+            val imgA12SarzanaGhiaccio = document.select("table.testo2:nth-child(7) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(6) > img:nth-child(1)")
+                .first()?.select("img")?.attr("src")?.let {
+                    "https://www.meteoapuane.it/$it"
+                } ?: ""
 
             val urlVideoA15SantoStefano = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
             val urlVideoA15Pontremoli = document.select("table.testo2:nth-child(10) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) > span:nth-child(1) > a:nth-child(3)")[0].attr("href")
