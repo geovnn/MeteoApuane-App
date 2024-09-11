@@ -1,5 +1,7 @@
 package com.geovnn.meteoapuane.presentation.viabilita
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -43,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,6 +77,15 @@ fun ViabilitaScreen(
     var fullscreenUri by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(Unit) {
         refreshData()
+    }
+    val activity = (LocalContext.current as? Activity)
+
+    BackHandler {
+        if (fullscreenUri!=null) {
+            fullscreenUri=null
+        } else {
+            activity?.finish()
+        }
     }
     Box(
         modifier = Modifier
