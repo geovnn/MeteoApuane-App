@@ -116,117 +116,119 @@ fun NowcastingScreen(
                     )
                 ) {
                     TitleText(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp), text = "STRUMENTI DI NOWCASTING")
-                    Row {
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.meteosatInfrarosso,
-                            title = "METEOSAT Infrarosso (Europa)",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.meteosatInfrarossoAnimazione,
-                            title = "METEOSAT infrarosso animazione (Europa)",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                    }
-                    Row {
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.temperaturaNubi,
-                            title = "TEMPERATURA NUBI al top (Europa)",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.meteosatVisibileAnimazione,
-                            title = "METEOSAT visibile animazione (Italia)",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                    }
-                    Row {
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.fulminazioniAnimazioneGolfoLigure,
-                            title = "FULMINAZIONI animazione (Golfo Ligure)",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.fulminazioniAnimazioneItalia,
-                            title = "FULMINAZIONI animazione (Italia)",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                    }
-                    Row {
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.radarPrecipitazioniSettepani,
-                            title = "RADAR PRECIPITAZIONI \"Settepani\" (Nord-Ovest)",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.radarPrecipitazioniMeteoFrance,
-                            title = "RADAR PRECIPITAZIONI \"MeteoFrance\"",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                    }
-                    Row {
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.cartaSinotticaEuropa,
-                            title = "CARTA SINOTTICA (Europa)",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                        WebcamImage(
-                            modifier  = Modifier.weight(1f),
-                            image = uiState.nowcastingPage.cartaSinotticaItalia,
-                            title = "CARTA SINOTTICA (Italia)",
-                            subtitle = null,
-                            onClick = {
-                                fullscreenImage=it
-                                showFullscreenImage=true
-                            }
-                        )
-                    }
+
                 }
+                Row {
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.meteosatInfrarosso,
+                        title = "METEOSAT Infrarosso (Europa)",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.meteosatInfrarossoAnimazione,
+                        title = "METEOSAT infrarosso animazione (Europa)",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                }
+                Row {
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.temperaturaNubi,
+                        title = "TEMPERATURA NUBI al top (Europa)",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.meteosatVisibileAnimazione,
+                        title = "METEOSAT visibile animazione (Italia)",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                }
+                Row {
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.fulminazioniAnimazioneGolfoLigure,
+                        title = "FULMINAZIONI animazione (Golfo Ligure)",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.fulminazioniAnimazioneItalia,
+                        title = "FULMINAZIONI animazione (Italia)",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                }
+                Row {
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.radarPrecipitazioniSettepani,
+                        title = "RADAR PRECIPITAZIONI \"Settepani\" (Nord-Ovest)",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.radarPrecipitazioniMeteoFrance,
+                        title = "RADAR PRECIPITAZIONI \"MeteoFrance\"",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                }
+                Row {
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.cartaSinotticaEuropa,
+                        title = "CARTA SINOTTICA (Europa)",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                    WebcamImage(
+                        modifier  = Modifier.weight(1f),
+                        image = uiState.nowcastingPage.cartaSinotticaItalia,
+                        title = "CARTA SINOTTICA (Italia)",
+                        subtitle = null,
+                        onClick = {
+                            fullscreenImage=it
+                            showFullscreenImage=true
+                        }
+                    )
+                }
+
             }
 
             AnimatedVisibility(visible = showFullscreenImage,

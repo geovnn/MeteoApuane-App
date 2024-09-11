@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,62 +34,39 @@ fun WebcamImage(
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             )
         ) {
-            if (image!=null) {
-                Column {
-                    ImageCoil(
-                        modifier = Modifier
-                            .clickable { onClick(image) }
-                            .fillMaxSize(),
-                        url = image,
-                        contentDescription = title?:"",
-                        contentScale = ContentScale.FillWidth
-                    )
+            Column(
+            ) {
+                ImageCoil(
+                    modifier = Modifier
+                        .clickable { onClick(image) }
+                        .fillMaxSize(),
+                    url = image,
+                    contentDescription = title?:"",
+                    contentScale = ContentScale.FillWidth
+                )
+                Column(
+                    modifier = Modifier.padding(5.dp)
+
+                ) {
                     if (title != null) {
-                        AutoResizeText(
+                        Text(
                             text = title,
-                            fontSizeRange = FontSizeRange(1.sp,20.sp),
-                            color = MaterialTheme.colorScheme.onSecondaryContainer,
-                            maxLines = 1
+                            maxLines = 10,
+                            fontSize = 20.sp
                         )
                     }
                     if (subtitle != null) {
-                        AutoResizeText(
+                        Text(
                             text = subtitle,
-                            fontSizeRange = FontSizeRange(1.sp,20.sp),
-                            color = MaterialTheme.colorScheme.onSecondaryContainer,
-                            maxLines = 2
+                            maxLines = 10,
                         )
                     }
                 }
-            } else {
-                Column {
-                    Image(
-                        modifier = Modifier.fillMaxSize(),
-                        imageVector = Icons.Default.BrokenImage,
-                        contentDescription = null,
-                        contentScale = ContentScale.FillWidth
-                    )
-                    if (title != null) {
-                        AutoResizeText(
-                            text = title,
-                            fontSizeRange = FontSizeRange(1.sp,20.sp),
-                            color = MaterialTheme.colorScheme.onSecondaryContainer,
-                            maxLines = 1
-                        )
-                    }
-                    if (subtitle != null) {
-                        AutoResizeText(
-                            text = subtitle,
-                            fontSizeRange = FontSizeRange(1.sp,20.sp),
-                            color = MaterialTheme.colorScheme.onSecondaryContainer,
-                            maxLines = 2
-                        )
-                    }
-                }
+
             }
         }
     }
