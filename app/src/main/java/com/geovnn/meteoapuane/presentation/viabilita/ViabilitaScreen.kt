@@ -185,15 +185,23 @@ fun ViabilitaScreen(
                         )
                         HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
                         Row(
-                            modifier = Modifier.height(100.dp)
+                            modifier = Modifier.height(150.dp)
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                AutoResizeText(
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1,
+                            Column(modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                Text(
                                     text = "S. Stefano Magra - km 100+100",
-                                    fontSizeRange = FontSizeRange(5.sp, 20.sp)
+                                    minLines = 2,
+                                    maxLines = 2,
+                                    textAlign = TextAlign.Center,
                                 )
+//                                AutoResizeText(
+//                                    textAlign = TextAlign.Center,
+//                                    maxLines = 1,
+//                                    text = "S. Stefano Magra - km 100+100",
+//                                    fontSizeRange = FontSizeRange(5.sp, 20.sp)
+//                                )
                                 Box() {
                                     if (uiState.viabilitaPage.urlVideoA15SantoStefano!="") {
                                         VideoView(
@@ -210,12 +218,14 @@ fun ViabilitaScreen(
                             }
                             VerticalDivider(modifier = Modifier.padding(horizontal = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
 
-                            Column(modifier = Modifier.weight(1f)) {
-                                AutoResizeText(
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1,
+                            Column(modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                Text(
                                     text = "Pontremoli - km 73+600",
-                                    fontSizeRange = FontSizeRange(5.sp, 20.sp)
+                                    maxLines = 2,
+                                    minLines = 2,
+                                    textAlign = TextAlign.Center,
                                 )
                                 Box() {
                                     if (uiState.viabilitaPage.urlVideoA15Pontremoli!="") {
@@ -233,14 +243,16 @@ fun ViabilitaScreen(
                         }
                         HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
                         Row(
-                            modifier = Modifier.height(100.dp)
+                            modifier = Modifier.height(150.dp)
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                AutoResizeText(
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1,
+                            Column(modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                Text(
                                     text = "Montelungo - km 60+600",
-                                    fontSizeRange = FontSizeRange(5.sp, 20.sp)
+                                    minLines = 2,
+                                    maxLines = 2,
+                                    textAlign = TextAlign.Center,
                                 )
                                 Box {
                                     if (uiState.viabilitaPage.urlVideoA15Montelungo != "") {
@@ -264,13 +276,15 @@ fun ViabilitaScreen(
                             )
                             Column(
                                 modifier = Modifier
-                                    .weight(1f)
+                                    .weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+
                             ) {
-                                AutoResizeText(
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1,
+                                Text(
                                     text = "Tugo - km 53+000",
-                                    fontSizeRange = FontSizeRange(5.sp, 20.sp)
+                                    minLines = 2,
+                                    maxLines = 2,
+                                    textAlign = TextAlign.Center,
                                 )
                                 Box {
                                     if (uiState.viabilitaPage.urlVideoA15Tugo != "") {
@@ -300,7 +314,7 @@ fun ViabilitaScreen(
                     )
                 ) {
                     Column(
-                        modifier = Modifier.padding(5.dp)
+                        modifier = Modifier.padding(5.dp),
                     ) {
                         TitleText(
                             modifier = Modifier.fillMaxWidth(),
@@ -359,14 +373,16 @@ fun ViabilitaScreen(
                         HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
 
                         Row(
-                            modifier = Modifier.height(100.dp)
+                            modifier = Modifier.height(150.dp)
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                AutoResizeText(
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1,
+                            Column(modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                Text(
                                     text = "Ceparana - km 90+400",
-                                    fontSizeRange = FontSizeRange(5.sp, 20.sp)
+                                    minLines = 2,
+                                    maxLines = 2,
+                                    textAlign = TextAlign.Center,
                                 )
                                 Box() {
                                     if (uiState.viabilitaPage.urlVideoA12Ceparana!="") {
@@ -384,12 +400,14 @@ fun ViabilitaScreen(
                             }
                             VerticalDivider(modifier = Modifier.padding(horizontal = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
 
-                            Column(modifier = Modifier.weight(1f)) {
-                                AutoResizeText(
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1,
+                            Column(modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                Text(
                                     text = "Luni - km 106+800",
-                                    fontSizeRange = FontSizeRange(5.sp, 20.sp)
+                                    minLines = 2,
+                                    maxLines = 2,
+                                    textAlign = TextAlign.Center,
                                 )
                                 Box() {
                                     if (uiState.viabilitaPage.urlVideoA12Luni!="") {
@@ -408,14 +426,16 @@ fun ViabilitaScreen(
                         }
                         HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
                         Row(
-                            modifier = Modifier.height(100.dp)
+                            modifier = Modifier.height(150.dp)
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                AutoResizeText(
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1,
+                            Column(modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                Text(
                                     text = "Avenza - km 114+000",
-                                    fontSizeRange = FontSizeRange(5.sp, 20.sp)
+                                    minLines = 2,
+                                    maxLines = 2,
+                                    textAlign = TextAlign.Center,
                                 )
                                 Box{
                                     if (uiState.viabilitaPage.urlVideoA12Avenza!="") {
@@ -432,13 +452,14 @@ fun ViabilitaScreen(
                             }
                             VerticalDivider(modifier = Modifier.padding(horizontal = 2.dp),color = MaterialTheme.colorScheme.onPrimaryContainer)
                             Column(modifier = Modifier
-                                .weight(1f)
+                                .weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                AutoResizeText(
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1,
+                                Text(
                                     text = "Cinquale - km 123+700",
-                                    fontSizeRange = FontSizeRange(5.sp, 20.sp)
+                                    minLines = 2,
+                                    maxLines = 2,
+                                    textAlign = TextAlign.Center,
                                 )
                                 Box {
                                     if (uiState.viabilitaPage.urlVideoA12Cinquale!="") {
