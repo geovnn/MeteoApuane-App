@@ -46,6 +46,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -93,7 +94,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Navigation() {
+fun Navigation(
+    windowSizeClass: androidx.window.core.layout.WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+) {
     val homeViewModel = hiltViewModel<HomeViewModel>()
     val provinciaViewModel = hiltViewModel<ProvinciaViewModel>()
     val confiniViewModel = hiltViewModel<ConfiniViewModel>()
@@ -333,7 +336,8 @@ fun Navigation() {
                 composable(route = Screen.ProvinciaScreen.route) {
                     ProvinciaScreen(
                         uiState = provinciaState,
-                        refreshData = { provinciaViewModel.updateData() }
+                        refreshData = { provinciaViewModel.updateData() },
+                        windowSizeClass = windowSizeClass
                     )
                 }
                 composable(route = Screen.ConfiniScreen.route) {

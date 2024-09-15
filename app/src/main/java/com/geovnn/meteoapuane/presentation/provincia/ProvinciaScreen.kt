@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowSizeClass
 import com.geovnn.meteoapuane.presentation.provincia.composables.PaginaProvincia
 import com.geovnn.meteoapuane.presentation.provincia.composables.PaginaSuccessivi
 import com.geovnn.meteoapuane.presentation.utils.composables.UltimoAggiornamentoText
@@ -42,7 +43,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProvinciaScreen(
     uiState: ProvinciaUiState,
-    refreshData: () -> Unit
+    refreshData: () -> Unit,
+    windowSizeClass: WindowSizeClass
 ) {
     val refreshScope = rememberCoroutineScope()
     var isRefreshing by remember { mutableStateOf(false) }
@@ -110,12 +112,21 @@ fun ProvinciaScreen(
                     modifier = Modifier.fillMaxSize(),
                     userScrollEnabled = false,
                     state = pagerState,
-                    beyondBoundsPageCount = 3
+                    beyondViewportPageCount = 3
                 ) { page ->
                     when(page) {
-                        0 -> PaginaProvincia( uiState = uiState.provinciaPage.paginaOggi)
-                        1 -> PaginaProvincia(uiState = uiState.provinciaPage.paginaDomani)
-                        2 -> PaginaProvincia(uiState = uiState.provinciaPage.paginaDopodomani)
+                        0 -> PaginaProvincia(
+                            uiState = uiState.provinciaPage.paginaOggi,
+                            windowSizeClass = windowSizeClass
+                        )
+                        1 -> PaginaProvincia(
+                            uiState = uiState.provinciaPage.paginaDomani,
+                            windowSizeClass = windowSizeClass
+                        )
+                        2 -> PaginaProvincia(
+                            uiState = uiState.provinciaPage.paginaDopodomani,
+                            windowSizeClass = windowSizeClass
+                        )
                         3 -> PaginaSuccessivi(uiState = uiState.provinciaPage.paginaSuccessivi)
                     }
                 }

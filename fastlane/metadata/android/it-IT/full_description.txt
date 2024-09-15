@@ -1,0 +1,2 @@
+App non ufficiale del progetto MeteoApuane.
+Il progetto MeteoApuane nasce nell’estate 2006 dall’esigenza di offrire per la prima volta un servizio di previsione e monitoraggio meteorologico più dettagliato e puntuale sulla provincia di Massa Carrara e territori limitrofi, notoriamente ai massimi livelli per complessità causata da esposizione, morfologia del territorio e frequenza di eventi calamitosi.
